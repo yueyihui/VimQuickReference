@@ -1,0 +1,539 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="commands_array_advanced_insertion">
+        <item>&amp;lt;b>g?&amp;lt;font color=red>&amp;lt;i>m&amp;lt;/i>&amp;lt;/font>&amp;lt;/b></item>
+        <item>&amp;lt;b>&amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font>^A  &amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font>^X&amp;lt;/b></item>
+        <item>&amp;lt;b>gq&amp;lt;font color=red>&amp;lt;i>m&amp;lt;/i>&amp;lt;/font>&amp;lt;/b></item>
+        <item>&amp;lt;b>:&amp;lt;font color=red>&amp;lt;i>r&amp;lt;/i>&amp;lt;/font>ce  &amp;lt;font color=red>&amp;lt;i>w&amp;lt;/i>&amp;lt;/font>↵&amp;lt;/b></item>
+        <item>&amp;lt;b>:&amp;lt;font color=red>&amp;lt;i>r&amp;lt;/i>&amp;lt;/font>le  &amp;lt;font color=red>&amp;lt;i>i&amp;lt;/i>&amp;lt;/font>↵&amp;lt;/b></item>
+        <item>&amp;lt;b>:&amp;lt;font color=red>&amp;lt;i>r&amp;lt;/i>&amp;lt;/font>ri  &amp;lt;font color=red>&amp;lt;i>w&amp;lt;/i>&amp;lt;/font>↵&amp;lt;/b></item>
+        <item>&amp;lt;b>!&amp;lt;font color=red>&amp;lt;i>m&amp;lt;/i>&amp;lt;/font>&amp;lt;font color=red>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font>↵&amp;lt;/b></item>
+        <item>&amp;lt;b>&amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font>!!&amp;lt;font color=red>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font>↵&amp;lt;/b></item>
+        <item>&amp;lt;b>:&amp;lt;font color=red>&amp;lt;i>r&amp;lt;/i>&amp;lt;/font>!&amp;lt;font color=red>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font>↵&amp;lt;/b></item>
+    </string-array>
+    <string-array name="commands_array_basic">
+        <item>&amp;lt;b>h  l  k  j&amp;lt;/b></item>
+        <item>&amp;lt;b>b  w&amp;lt;/b></item>
+        <item>&amp;lt;b>ge  e&amp;lt;/b></item>
+        <item>&amp;lt;b>{  }&amp;lt;/b></item>
+        <item>&amp;lt;b>(  )&amp;lt;/b></item>
+        <item>&amp;lt;b>0  gm&amp;lt;/b></item>
+        <item>&amp;lt;b>^  $&amp;lt;/b></item>
+        <item>&amp;lt;b>&amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font>G  &amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font>gg&amp;lt;/b></item>
+        <item>&amp;lt;b>&amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font>%&amp;lt;/b></item>
+        <item>&amp;lt;b>&amp;lt;font color=red>&amp;lt;i>n|&amp;lt;/i>&amp;lt;/font>&amp;lt;/b></item>
+        <item>&amp;lt;b>%&amp;lt;/b></item>
+        <item>&amp;lt;b>&amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font>H  &amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font>L&amp;lt;/b></item>
+        <item>&amp;lt;b>M&amp;lt;/b></item>
+    </string-array>
+    <string-array name="commands_array_complex_movement">
+        <item>&amp;lt;b>-  +&amp;lt;/b></item>
+        <item>&amp;lt;b>B  W&amp;lt;/b></item>
+        <item>&amp;lt;b>gE  E&amp;lt;/b></item>
+        <item>"&amp;lt;b>&amp;lt;font color='red'>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font>_&amp;lt;/b>"</item>
+        <item>&amp;lt;b>g0&amp;lt;/b></item>
+        <item>&amp;lt;b>g^  g$&amp;lt;/b></item>
+        <item>&amp;lt;b>gk  gj&amp;lt;/b></item>
+        <item>"&amp;lt;b>f&amp;lt;font color='red'>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font>  F&amp;lt;font color='red'>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font>&amp;lt;/b>"</item>
+        <item>"&amp;lt;b>t&amp;lt;font color='red'>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font>  T&amp;lt;font color='red'>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font>&amp;lt;/b>"</item>
+        <item>&amp;lt;b>;  ,&amp;lt;/b></item>
+        <item>&amp;lt;b>[[  ]]&amp;lt;/b></item>
+        <item>&amp;lt;b>[]  ][&amp;lt;/b></item>
+        <item>&amp;lt;b>[(  ])&amp;lt;/b></item>
+        <item>&amp;lt;b>[{  ]}&amp;lt;/b></item>
+        <item>&amp;lt;b>[m  ]m&amp;lt;/b></item>
+        <item>&amp;lt;b>[#  ]#&amp;lt;/b></item>
+        <item>&amp;lt;b>[*  ]*&amp;lt;/b></item>
+    </string-array>
+    <string-array name="commands_array_copying">
+        <item>&amp;lt;b>\"&amp;lt;font color=red>&amp;lt;i>x&amp;lt;/i>&amp;lt;/font>&amp;lt;/b></item>
+        <item>&amp;lt;b>:reg↵&amp;lt;/b></item>
+        <item>&amp;lt;b>:reg  &amp;lt;font color=red>&amp;lt;i>x&amp;lt;/i>&amp;lt;/font>↵&amp;lt;/b></item>
+        <item>&amp;lt;b>y&amp;lt;font color=red>&amp;lt;i>m&amp;lt;/i>&amp;lt;/font>&amp;lt;/b></item>
+        <item>&amp;lt;b>yy&amp;lt;small>  or  &amp;lt;//small>Y&amp;lt;/b></item>
+        <item>&amp;lt;b>p  P&amp;lt;/b></item>
+        <item>&amp;lt;b>]p  [p&amp;lt;/b></item>
+        <item>&amp;lt;b>gp  gP&amp;lt;/b></item>
+    </string-array>
+    <string-array name="commands_array_deletion">
+        <item>&amp;lt;b>x  X&amp;lt;/b></item>
+        <item>&amp;lt;b>d&amp;lt;font color=red>&amp;lt;i>m&amp;lt;/i>&amp;lt;/font>&amp;lt;/b></item>
+        <item>&amp;lt;b>dd  D&amp;lt;/b></item>
+        <item>&amp;lt;b>J  gJ&amp;lt;/b></item>
+        <item>&amp;lt;b>:&amp;lt;font color=red>&amp;lt;i>r&amp;lt;/i>&amp;lt;/font>d↵&amp;lt;/b></item>
+        <item>&amp;lt;b>:&amp;lt;font color=red>&amp;lt;i>r&amp;lt;/i>&amp;lt;/font>d&amp;lt;font color=red>&amp;lt;i>x&amp;lt;/i>&amp;lt;/font>↵&amp;lt;/b></item>
+    </string-array>
+    <string-array name="commands_array_ex_commands">
+        <item>&amp;lt;b>:e  &amp;lt;font color=red>&amp;lt;i>f&amp;lt;/i>&amp;lt;/font>&amp;lt;/b></item>
+        <item>&amp;lt;b>:e!  &amp;lt;font color=red>&amp;lt;i>f&amp;lt;/i>&amp;lt;/font>&amp;lt;/b></item>
+        <item>&amp;lt;b>:wn  :wN&amp;lt;/b></item>
+        <item>&amp;lt;b>:n  :N&amp;lt;/b></item>
+        <item>&amp;lt;b>:&amp;lt;font color=red>&amp;lt;i>r&amp;lt;/i>&amp;lt;/font>w&amp;lt;/b></item>
+        <item>&amp;lt;b>:&amp;lt;font color=red>&amp;lt;i>r&amp;lt;/i>&amp;lt;/font>w  &amp;lt;font color=red>&amp;lt;i>f&amp;lt;/i>&amp;lt;/font>&amp;lt;/b></item>
+        <item>&amp;lt;b>:&amp;lt;font color=red>&amp;lt;i>r&amp;lt;/i>&amp;lt;/font>w&amp;lt;font color=red>&amp;lt;i>>&amp;lt;/i>&amp;lt;/font>&amp;lt;font color=red>&amp;lt;i>>&amp;lt;/i>&amp;lt;/font>&amp;lt;font color=red>&amp;lt;i>f&amp;lt;/i>&amp;lt;/font>&amp;lt;/b></item>
+        <item>&amp;lt;b>:q  :q!&amp;lt;/b></item>
+        <item>&amp;lt;b>:wq&amp;lt;small>  or  &amp;lt;//small>:x&amp;lt;small>  or&amp;lt;//small>  ZZ&amp;lt;/b></item>
+        <item>&amp;lt;b>&amp;lt;up> &amp;lt;down>&amp;lt;/b></item>
+        <item>&amp;lt;b>:r  &amp;lt;font color=red>&amp;lt;i>f&amp;lt;/i>&amp;lt;/font>&amp;lt;/b></item>
+        <item>&amp;lt;b>:r!  &amp;lt;font color=red>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font>&amp;lt;/b></item>
+        <item>&amp;lt;b>:all&amp;lt;/b></item>
+        <item>&amp;lt;b>:args&amp;lt;/b></item>
+    </string-array>
+    <string-array name="commands_array_ex_ranges">
+        <item>&amp;lt;b>,  ;&amp;lt;/b></item>
+        <item>&amp;lt;b>&amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font>&amp;lt;/b></item>
+        <item>&amp;lt;b>.  $&amp;lt;/b></item>
+        <item>&amp;lt;b>%  *&amp;lt;/b></item>
+        <item>"&amp;lt;b>'&amp;lt;font color=red>&amp;lt;i>t&amp;lt;/i>&amp;lt;/font>&amp;lt;/b>"</item>
+        <item>&amp;lt;b>/&amp;lt;font color=red>&amp;lt;i>p&amp;lt;/i>&amp;lt;/font>/  ?&amp;lt;font color=red>&amp;lt;i>p&amp;lt;/i>&amp;lt;/font>?&amp;lt;/b></item>
+        <item>&amp;lt;b>+&amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font>  -&amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font>&amp;lt;/b></item>
+    </string-array>
+    <string-array name="commands_array_folding">
+        <item>&amp;lt;b>zf&amp;lt;font color=red>&amp;lt;i>m&amp;lt;/i>&amp;lt;/font>&amp;lt;/b></item>
+        <item>&amp;lt;b>:&amp;lt;font color=red>&amp;lt;i>r&amp;lt;/i>&amp;lt;/font>fo&amp;lt;/b></item>
+        <item>&amp;lt;b>zd  zE&amp;lt;/b></item>
+        <item>&amp;lt;b>zo  zc  zO  zC&amp;lt;/b></item>
+        <item>&amp;lt;b>[z  ]z&amp;lt;/b></item>
+        <item>&amp;lt;b>zj  zk&amp;lt;/b></item>
+    </string-array>
+    <string-array name="commands_array_insert_mode">
+        <item>&amp;lt;b>^V&amp;lt;font color=red>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font>  ^V&amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font>&amp;lt;/b></item>
+        <item>&amp;lt;b>^A&amp;lt;/b></item>
+        <item>&amp;lt;b>^@&amp;lt;/b></item>
+        <item>&amp;lt;b>^R&amp;lt;font color=red>&amp;lt;i>x&amp;lt;/i>&amp;lt;/font>  ^R^R&amp;lt;font color=red>&amp;lt;i>x&amp;lt;/i>&amp;lt;/font>&amp;lt;/b></item>
+        <item>&amp;lt;b>^N  ^P&amp;lt;/b></item>
+        <item>&amp;lt;b>^W&amp;lt;/b></item>
+        <item>&amp;lt;b>^U&amp;lt;/b></item>
+        <item>&amp;lt;b>^D  ^T&amp;lt;/b></item>
+        <item>&amp;lt;b>^K&amp;lt;font color=red>&amp;lt;i>c&amp;lt;small>1&amp;lt;//small>&amp;lt;/i>&amp;lt;/font>&amp;lt;font color=red>&amp;lt;i>c&amp;lt;small>2&amp;lt;//small>&amp;lt;/i>&amp;lt;/font> &amp;lt;small>  or  &amp;lt;//small> &amp;lt;font color=red>&amp;lt;i>c&amp;lt;small>1&amp;lt;//small>&amp;lt;/i>&amp;lt;/font>←&amp;lt;font color=red>&amp;lt;i>c&amp;lt;small>2&amp;lt;//small>&amp;lt;/i>&amp;lt;/font>&amp;lt;/b></item>
+        <item>&amp;lt;b>^O&amp;lt;font color=red>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font>&amp;lt;/b></item>
+        <item>&amp;lt;b>^X^E  ^X^Y&amp;lt;/b></item>
+        <item>abandon edition</item>
+    </string-array>
+    <string-array name="commands_array_insertion">
+        <item>&amp;lt;b>i  a&amp;lt;/b></item>
+        <item>&amp;lt;b>I  A&amp;lt;/b></item>
+        <item>&amp;lt;b>gI&amp;lt;/b></item>
+        <item>&amp;lt;b>o  O&amp;lt;/b></item>
+        <item>&amp;lt;b>r&amp;lt;font color=red>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font>&amp;lt;/b></item>
+        <item>&amp;lt;b>gr&amp;lt;font color=red>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font>&amp;lt;/b></item>
+        <item>&amp;lt;b>R&amp;lt;/b></item>
+        <item>&amp;lt;b>gR&amp;lt;/b></item>
+        <item>&amp;lt;b>c&amp;lt;font color=red>&amp;lt;i>m&amp;lt;/i>&amp;lt;/font>&amp;lt;/b></item>
+        <item>&amp;lt;b>cc &amp;lt;small>  or  &amp;lt;//small> S&amp;lt;/b></item>
+        <item>&amp;lt;b>C&amp;lt;/b></item>
+        <item>&amp;lt;b>s&amp;lt;/b></item>
+        <item>&amp;lt;b>~&amp;lt;/b></item>
+        <item>&amp;lt;b>g~&amp;lt;font color=red>&amp;lt;i>m&amp;lt;/i>&amp;lt;/font>&amp;lt;/b></item>
+        <item>&amp;lt;b>gu&amp;lt;font color=red>&amp;lt;i>m&amp;lt;/i>&amp;lt;/font>  gU&amp;lt;font color=red>&amp;lt;i>m&amp;lt;/i>&amp;lt;/font>&amp;lt;/b></item>
+        <item>shift left</item>
+        <item>&amp;lt;b>&amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font>&amp;lt;font color=red>&amp;lt;i>&amp;lt;&amp;lt;/i>&amp;lt;/font>&amp;lt;font color=red>&amp;lt;i>&amp;lt;&amp;lt;/i>&amp;lt;/font> &amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font>&amp;lt;font color=red>&amp;lt;i>>&amp;lt;/i>&amp;lt;/font>&amp;lt;font color=red>&amp;lt;i>>&amp;lt;/i>&amp;lt;/font>&amp;lt;/b></item>
+    </string-array>
+    <string-array name="commands_array_key_mapping">
+        <item>&amp;lt;b>:map  &amp;lt;font color=red>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font>  &amp;lt;font color=red>&amp;lt;i>e&amp;lt;/i>&amp;lt;/font>↵&amp;lt;/b></item>
+        <item>&amp;lt;b>:map!  &amp;lt;font color=red>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font>  &amp;lt;font color=red>&amp;lt;i>e&amp;lt;/i>&amp;lt;/font>↵&amp;lt;/b></item>
+        <item>&amp;lt;b>:unmap  &amp;lt;font color=red>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font>↵  :unmap!  &amp;lt;font color=red>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font>↵&amp;lt;/b></item>
+        <item>&amp;lt;b>:mk  &amp;lt;font color=red>&amp;lt;i>f&amp;lt;/i>&amp;lt;/font>↵&amp;lt;/b></item>
+        <item>&amp;lt;b>:ab  &amp;lt;font color=red>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font>  &amp;lt;font color=red>&amp;lt;i>e&amp;lt;/i>&amp;lt;/font>↵&amp;lt;/b></item>
+        <item>&amp;lt;b>:ab  &amp;lt;font color=red>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font>↵&amp;lt;/b></item>
+        <item>&amp;lt;b>:una  &amp;lt;font color=red>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font>↵&amp;lt;/b></item>
+    </string-array>
+    <string-array name="commands_array_marks_motions">
+        <item>&amp;lt;b>m&amp;lt;font color=red>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font>&amp;lt;/b></item>
+        <item>&amp;lt;b>`&amp;lt;font color=red>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font>  `&amp;lt;font color=red>&amp;lt;i>C&amp;lt;/i>&amp;lt;/font>&amp;lt;/b></item>
+        <item>&amp;lt;b>`&amp;lt;font color=red>&amp;lt;i>0..9&amp;lt;/i>&amp;lt;/font>&amp;lt;/b></item>
+        <item>&amp;lt;b>``  `\"&amp;lt;/b></item>
+        <item>&amp;lt;b>`[  `]&amp;lt;/b></item>
+        <item>&amp;lt;b>:marks↵&amp;lt;/b></item>
+        <item>&amp;lt;b>:jumps↵&amp;lt;/b></item>
+        <item>&amp;lt;b>&amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font>^O&amp;lt;/b></item>
+        <item>&amp;lt;b>&amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font>^I&amp;lt;/b></item>
+    </string-array>
+    <string-array name="commands_array_misc">
+        <item>&amp;lt;b>:sh↵  :!&amp;lt;font color=red>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font>↵&amp;lt;/b></item>
+        <item>&amp;lt;b>K&amp;lt;/b></item>
+        <item>&amp;lt;b>:make↵&amp;lt;/b></item>
+        <item>&amp;lt;b>:cn↵  :cp↵&amp;lt;/b></item>
+        <item>&amp;lt;b>:cl↵  :cf↵&amp;lt;/b></item>
+        <item>&amp;lt;b>^L  ^G&amp;lt;/b></item>
+        <item>&amp;lt;b>g^G&amp;lt;/b></item>
+        <item>&amp;lt;b>ga&amp;lt;/b></item>
+        <item>&amp;lt;b>gf&amp;lt;/b></item>
+        <item>&amp;lt;b>:redir&amp;lt;font color=red>&amp;lt;i>>&amp;lt;/i>&amp;lt;/font>&amp;lt;font color=red>&amp;lt;i>f&amp;lt;/i>&amp;lt;/font>↵&amp;lt;/b></item>
+        <item>&amp;lt;b>:mkview  &amp;lt;font color=red>&amp;lt;i>[f]&amp;lt;/i>&amp;lt;/font>&amp;lt;/b></item>
+        <item>&amp;lt;b>:loadview  &amp;lt;font color=red>&amp;lt;i>[f]&amp;lt;/i>&amp;lt;/font>&amp;lt;/b></item>
+        <item>&amp;lt;b>^@  ^K  ^_  \\  F&amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font>  ^F&amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font>&amp;lt;/b></item>
+    </string-array>
+    <string-array name="commands_array_offsets_search">
+        <item>&amp;lt;b>&amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font>&amp;lt;small>  or  &amp;lt;//small>+&amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font>&amp;lt;/b></item>
+        <item>&amp;lt;b>-&amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font>&amp;lt;/b></item>
+        <item>&amp;lt;b>e+&amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font>  e-&amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font>&amp;lt;/b></item>
+        <item>&amp;lt;b>s+&amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font>  s-&amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font>&amp;lt;/b></item>
+        <item>&amp;lt;b>;&amp;lt;font color=red>&amp;lt;i>sc&amp;lt;/i>&amp;lt;/font>&amp;lt;/b></item>
+    </string-array>
+    <string-array name="commands_array_scrolling">
+        <item>&amp;lt;b>^E  ^Y&amp;lt;/b></item>
+        <item>&amp;lt;b>^D  ^U&amp;lt;/b></item>
+        <item>&amp;lt;b>^F  ^B&amp;lt;/b></item>
+        <item>&amp;lt;b>zt&amp;lt;small>  or  &amp;lt;//small>z↵&amp;lt;/b></item>
+        <item>&amp;lt;b>zz&amp;lt;small>  or  &amp;lt;//small>z. &amp;lt;/b></item>
+        <item>&amp;lt;b>zb&amp;lt;small>  or  &amp;lt;//small>z-&amp;lt;/b></item>
+        <item>&amp;lt;b>zh  zl&amp;lt;/b></item>
+        <item>&amp;lt;b>zH  zL&amp;lt;/b></item>
+        <item>&amp;lt;b>^Ws&amp;lt;small>  or  &amp;lt;//small>:split↵&amp;lt;/b></item>
+        <item>&amp;lt;b>^Wn&amp;lt;small>  or  &amp;lt;//small>:new↵&amp;lt;/b></item>
+        <item>&amp;lt;b>^Wo&amp;lt;small>  or  &amp;lt;//small>:on↵&amp;lt;/b></item>
+        <item>&amp;lt;b>^Wj  ^Wk&amp;lt;/b></item>
+        <item>&amp;lt;b>^Ww  ^W^W&amp;lt;/b></item>
+    </string-array>
+    <string-array name="commands_array_search_sub">
+        <item>&amp;lt;b>/&amp;lt;font color=red>&amp;lt;i>s&amp;lt;/i>&amp;lt;/font>↵  ?&amp;lt;font color=red>&amp;lt;i>s&amp;lt;/i>&amp;lt;/font>↵&amp;lt;/b></item>
+        <item>&amp;lt;b>/&amp;lt;font color=red>&amp;lt;i>s&amp;lt;/i>&amp;lt;/font>/&amp;lt;font color=red>&amp;lt;i>o&amp;lt;/i>&amp;lt;/font>↵  ?&amp;lt;font color=red>&amp;lt;i>s&amp;lt;/i>&amp;lt;/font>?&amp;lt;font color=red>&amp;lt;i>o&amp;lt;/i>&amp;lt;/font>↵&amp;lt;/b></item>
+        <item>&amp;lt;b>n&amp;lt;small>  or  &amp;lt;//small>/↵&amp;lt;/b></item>
+        <item>&amp;lt;b>N&amp;lt;small>  or  &amp;lt;//small>?↵&amp;lt;/b></item>
+        <item>&amp;lt;b>#  *&amp;lt;/b></item>
+        <item>&amp;lt;b>g#  g*&amp;lt;/b></item>
+        <item>&amp;lt;b>gd  gD&amp;lt;/b></item>
+        <item>&amp;lt;b>:&amp;lt;font color=red>&amp;lt;i>r&amp;lt;/i>&amp;lt;/font>s/&amp;lt;font color=red>&amp;lt;i>f&amp;lt;/i>&amp;lt;/font>/&amp;lt;font color=red>&amp;lt;i>t&amp;lt;/i>&amp;lt;/font>/&amp;lt;font color=red>&amp;lt;i>x&amp;lt;/i>&amp;lt;/font>↵&amp;lt;/b></item>
+        <item>&amp;lt;b>:&amp;lt;font color=red>&amp;lt;i>r&amp;lt;/i>&amp;lt;/font>s  &amp;lt;font color=red>&amp;lt;i>x&amp;lt;/i>&amp;lt;/font>↵&amp;lt;/b></item>
+    </string-array>
+    <string-array name="commands_array_special_char_search">
+        <item>&amp;lt;b>.  ^  $&amp;lt;/b></item>
+        <item>&amp;lt;b>\\&amp;lt;  \\>&amp;lt;/b></item>
+        <item>&amp;lt;b>[&amp;lt;font color=red>&amp;lt;i>c&amp;lt;small>1&amp;lt;//small>&amp;lt;/i>&amp;lt;/font>-&amp;lt;font color=red>&amp;lt;i>c&amp;lt;small>2&amp;lt;//small>&amp;lt;/i>&amp;lt;/font>]&amp;lt;/b></item>
+        <item>&amp;lt;b>[^&amp;lt;font color=red>&amp;lt;i>c&amp;lt;small>1&amp;lt;//small>&amp;lt;/i>&amp;lt;/font>-&amp;lt;font color=red>&amp;lt;i>c&amp;lt;small>2&amp;lt;//small>&amp;lt;/i>&amp;lt;/font>]&amp;lt;/b></item>
+        <item>&amp;lt;b>\\i  \\k  \\I  \\K&amp;lt;/b></item>
+        <item>&amp;lt;b>\\f  \\p  \\F  \\P&amp;lt;/b></item>
+        <item>&amp;lt;b>\\s  \\S&amp;lt;/b></item>
+        <item>&amp;lt;b>\\e  \\d  \\r  \\b&amp;lt;/b></item>
+        <item>&amp;lt;b>\\=  *  \\+&amp;lt;/b></item>
+        <item>&amp;lt;b>\\&amp;lt;font color=red>&amp;lt;i>|&amp;lt;/i>&amp;lt;/font>&amp;lt;/b></item>
+        <item>&amp;lt;b>\\(  \\)&amp;lt;/b></item>
+        <item>&amp;lt;b>\\&amp;amp;  \\&amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font>&amp;lt;/b></item>
+        <item>&amp;lt;b>\\u  \\l&amp;lt;/b></item>
+        <item>&amp;lt;b>\\c  \\C&amp;lt;/b></item>
+    </string-array>
+    <string-array name="commands_array_tags">
+        <item>&amp;lt;b>:ta  &amp;lt;font color=red>&amp;lt;i>t&amp;lt;/i>&amp;lt;/font>↵&amp;lt;/b></item>
+        <item>&amp;lt;b>:&amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font>ta↵&amp;lt;/b></item>
+        <item>&amp;lt;b>^]  ^T&amp;lt;/b></item>
+        <item>&amp;lt;b>:ts  &amp;lt;font color=red>&amp;lt;i>t&amp;lt;/i>&amp;lt;/font>↵&amp;lt;/b></item>
+        <item>&amp;lt;b>:tj  &amp;lt;font color=red>&amp;lt;i>t&amp;lt;/i>&amp;lt;/font>↵&amp;lt;/b></item>
+        <item>&amp;lt;b>:tags↵&amp;lt;/b></item>
+        <item>&amp;lt;b>:&amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font>po↵  :&amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font>^T↵&amp;lt;/b></item>
+        <item>&amp;lt;b>:tl↵&amp;lt;/b></item>
+        <item>&amp;lt;b>^W}  :pt &amp;lt;font color=red>&amp;lt;i>t&amp;lt;/i>&amp;lt;/font>↵&amp;lt;/b></item>
+        <item>&amp;lt;b>^W]&amp;lt;/b></item>
+        <item>&amp;lt;b>^Wz&amp;lt;small>  or  &amp;lt;//small>:pc↵&amp;lt;/b></item>
+    </string-array>
+    <string-array name="commands_array_undoing">
+        <item>&amp;lt;b>u  U&amp;lt;/b></item>
+        <item>&amp;lt;b>.  ^R&amp;lt;/b></item>
+        <item>"&amp;lt;b>&amp;lt;font color='red'>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font>.&amp;lt;/b>"</item>
+        <item>"&amp;lt;b>q&amp;lt;font color='red'>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font>  q&amp;lt;font color='red'>&amp;lt;i>C&amp;lt;/i>&amp;lt;/font>&amp;lt;/b>"</item>
+        <item>&amp;lt;b>q&amp;lt;/b></item>
+        <item>"&amp;lt;b>@&amp;lt;font color='red'>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font>&amp;lt;/b>"</item>
+        <item>&amp;lt;b>@@&amp;lt;/b></item>
+        <item>"&amp;lt;b>:@&amp;lt;font color='red'>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font>&amp;lt;font size='+1'>↵&amp;lt;/font>&amp;lt;/b>"</item>
+        <item>"&amp;lt;b>:&amp;lt;font color='red'>&amp;lt;i>r&amp;lt;/i>&amp;lt;/font>g/&amp;lt;font color='red'>&amp;lt;i>p&amp;lt;/i>&amp;lt;/font>/&amp;lt;font color='red'>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font>&amp;lt;font size='+1'>↵&amp;lt;/font>&amp;lt;/b>"</item>
+    </string-array>
+    <string-array name="commands_array_visual_mode">
+        <item>&amp;lt;b>v  V  ˆV&amp;lt;/b></item>
+        <item>&amp;lt;b>o&amp;lt;/b></item>
+        <item>&amp;lt;b>gv&amp;lt;/b></item>
+        <item>&amp;lt;b>aw  as  ap&amp;lt;/b></item>
+        <item>&amp;lt;b>ab  aB&amp;lt;/b></item>
+    </string-array>
+    <string-array name="descrip_array_advanced_insertion">
+        <item>perform rot13 encoding on movement &amp;lt;font color=red>&amp;lt;i>m&amp;lt;/i>&amp;lt;/font></item>
+        <item>&amp;lt;font color=red>&amp;lt;i>+n&amp;lt;/i>&amp;lt;/font>, &amp;lt;font color=red>&amp;lt;i>-n&amp;lt;/i>&amp;lt;/font> to number under cursor</item>
+        <item>format lines of movement &amp;lt;font color=red>&amp;lt;i>m&amp;lt;/i>&amp;lt;/font> to fixed width</item>
+        <item>center lines in range r to width &amp;lt;font color=red>&amp;lt;i>w&amp;lt;/i>&amp;lt;/font></item>
+        <item>left align lines in range &amp;lt;font color=red>&amp;lt;i>r&amp;lt;/i>&amp;lt;/font> with indent &amp;lt;font color=red>&amp;lt;i>i&amp;lt;/i>&amp;lt;/font></item>
+        <item>right align lines in range &amp;lt;font color=red>&amp;lt;i>r&amp;lt;/i>&amp;lt;/font> to width &amp;lt;font color=red>&amp;lt;i>w&amp;lt;/i>&amp;lt;/font></item>
+        <item>filter lines of movement &amp;lt;font color=red>&amp;lt;i>m&amp;lt;/i>&amp;lt;/font> through command &amp;lt;font color=red>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font></item>
+        <item>filter &amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font> lines through command &amp;lt;font color=red>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font></item>
+        <item>filter range &amp;lt;font color=red>&amp;lt;i>r&amp;lt;/i>&amp;lt;/font> lines through command &amp;lt;font color=red>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font></item>
+    </string-array>
+    <string-array name="descrip_array_basic">
+        <item>character left, right; line up, down</item>
+        <item>word/token left, right</item>
+        <item>end of word/token left, right</item>
+        <item>beginning of previous, next paragraph</item>
+        <item>beginning of previous, next sentence</item>
+        <item>beginning, middle of line</item>
+        <item>first, last character of line</item>
+        <item>line &amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font>, default the last, first</item>
+        <item>percentage &amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font> of the file (&amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font> must be provided)</item>
+        <item>column &amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font> of current line</item>
+        <item>match of next brace, bracket, comment, #define</item>
+        <item>line &amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font> from start, bottom of window</item>
+        <item>middle line of window</item>
+    </string-array>
+    <string-array name="descrip_array_complex_movement">
+        <item>line up, down on first non-blank character</item>
+        <item>space-separated word left, right</item>
+        <item>end of space-separated word left, right</item>
+        <item>down &amp;lt;font color=red>&amp;lt;i>n-1&amp;lt;/i>&amp;lt;/font> line on first non-blank character</item>
+        <item>beginning of screen line</item>
+        <item>first, last character of screen line</item>
+        <item>screen line up, down</item>
+        <item>next, previous occurence of character &amp;lt;font color=red>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font></item>
+        <item>before next, previous occurence of &amp;lt;font color=red>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font></item>
+        <item>repeat last fFtT, in opposite direction</item>
+        <item>start of section backward, forward</item>
+        <item>end of section backward, forward</item>
+        <item>unclosed (, ) backward, forward</item>
+        <item>unclosed {, } backward, forward</item>
+        <item>start of backward, forward Java method</item>
+        <item>unclosed #if, #else, #endif backward, forward</item>
+        <item>start, end of /* */ backward, forward</item>
+    </string-array>
+    <string-array name="descrip_array_copying">
+        <item>use register &amp;lt;font color=red>&amp;lt;i>x&amp;lt;/i>&amp;lt;/font> for next delete, yank, put</item>
+        <item>show the content of all registers</item>
+        <item>show the content of registers &amp;lt;font color=red>&amp;lt;i>x&amp;lt;/i>&amp;lt;/font></item>
+        <item>yank the text of movement command &amp;lt;font color=red>&amp;lt;i>m&amp;lt;/i>&amp;lt;/font></item>
+        <item>yank current line into register</item>
+        <item>put register after, before cursor position</item>
+        <item>like p, P with indent adjusted</item>
+        <item>like p, P leaving cursor after new text</item>
+    </string-array>
+    <string-array name="descrip_array_deletion">
+        <item>delete character under, before cursor</item>
+        <item>delete text of movement command &amp;lt;font color=red>&amp;lt;i>m&amp;lt;/i>&amp;lt;/font></item>
+        <item>delete current line, to the end of line</item>
+        <item>join current line with next, without space</item>
+        <item>delete range &amp;lt;font color=red>&amp;lt;i>r&amp;lt;/i>&amp;lt;/font> lines</item>
+        <item>delete range &amp;lt;font color=red>&amp;lt;i>r&amp;lt;/i>&amp;lt;/font> lines into register &amp;lt;font color=red>&amp;lt;i>x&amp;lt;/i>&amp;lt;/font></item>
+    </string-array>
+    <string-array name="descrip_array_ex_commands">
+        <item>edit file &amp;lt;font color=red>&amp;lt;i>f&amp;lt;/i>&amp;lt;/font>, unless changes have been made</item>
+        <item>edit file &amp;lt;font color=red>&amp;lt;i>f&amp;lt;/i>&amp;lt;/font> always (by default reload current)</item>
+        <item>write file and edit next, previous one</item>
+        <item>edit next, previous file in list</item>
+        <item>write range &amp;lt;font color=red>&amp;lt;i>r&amp;lt;/i>&amp;lt;/font> to current file</item>
+        <item>write range &amp;lt;font color=red>&amp;lt;i>r&amp;lt;/i>&amp;lt;/font> to file &amp;lt;font color=red>&amp;lt;i>f&amp;lt;/i>&amp;lt;/font></item>
+        <item>append range &amp;lt;font color=red>&amp;lt;i>r&amp;lt;/i>&amp;lt;/font> to file &amp;lt;font color=red>&amp;lt;i>f&amp;lt;/i>&amp;lt;/font></item>
+        <item>quit and confirm, quit and discard changes</item>
+        <item>write to current file and exit</item>
+        <item>recall commands starting with current</item>
+        <item>insert content of file &amp;lt;font color=red>&amp;lt;i>f&amp;lt;/i>&amp;lt;/font> below cursor</item>
+        <item>insert output of command &amp;lt;font color=red>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font> below cursor</item>
+        <item>open a window for each file in the argument list</item>
+        <item>display the argument list</item>
+    </string-array>
+    <string-array name="descrip_array_ex_ranges">
+        <item>separates two lines numbers, set to first line</item>
+        <item>an absolute line number &amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font></item>
+        <item>the current line, the last line in file</item>
+        <item>entire file, visual area</item>
+        <item>position of mark &amp;lt;font color=red>&amp;lt;i>t&amp;lt;/i>&amp;lt;/font></item>
+        <item>the next, previous line where &amp;lt;font color=red>&amp;lt;i>p&amp;lt;/i>&amp;lt;/font> matches</item>
+        <item>&amp;lt;font color=red>&amp;lt;i>+n&amp;lt;/i>&amp;lt;/font>, &amp;lt;font color=red>&amp;lt;i>-n&amp;lt;/i>&amp;lt;/font> to the preceding line number</item>
+    </string-array>
+    <string-array name="descrip_array_folding">
+        <item>create fold of movement &amp;lt;font color=red>&amp;lt;i>m&amp;lt;/i>&amp;lt;/font></item>
+        <item>create fold for range &amp;lt;font color=red>&amp;lt;i>r&amp;lt;/i>&amp;lt;/font></item>
+        <item>delete fold at cursor, all in window</item>
+        <item>open, close one fold; recursively</item>
+        <item>move to start, end of current open fold</item>
+        <item>move down, up to start, end of next fold</item>
+    </string-array>
+    <string-array name="descrip_array_insert_mode">
+        <item>insert char &amp;lt;font color=red>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font> literally, decimal value &amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font></item>
+        <item>insert previously inserted text</item>
+        <item>same as ^A and stop insert → command mode</item>
+        <item>insert content of register &amp;lt;font color=red>&amp;lt;i>x&amp;lt;/i>&amp;lt;/font>, literally</item>
+        <item>text completion before, after cursor</item>
+        <item>delete word before cursor</item>
+        <item>delete all inserted character in current line</item>
+        <item>shift left, right one shift width</item>
+        <item>enter digraph &amp;lt;font color=red>&amp;lt;i>\\c1,c2\\&amp;lt;/i>&amp;lt;/font></item>
+        <item>execute &amp;lt;font color=red>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font> in temporary command mode</item>
+        <item>scroll up, down</item>
+        <item>abandon edition → command mode</item>
+    </string-array>
+    <string-array name="descrip_array_insertion">
+        <item>insert before, after cursor</item>
+        <item>insert at beginning, end of line</item>
+        <item>insert text in first column</item>
+        <item>open a new line below, above the current line</item>
+        <item>replace character under cursor with &amp;lt;font color=red>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font></item>
+        <item>like r, but without affecting layout</item>
+        <item>replace characters starting at the cursor</item>
+        <item>like R, but without affecting layout</item>
+        <item>change text of movement command &amp;lt;font color=red>&amp;lt;i>m&amp;lt;/i>&amp;lt;/font></item>
+        <item>change current line</item>
+        <item>change to the end of line</item>
+        <item>change one character and insert</item>
+        <item>switch case and advance cursor</item>
+        <item>switch case of movement command &amp;lt;font color=red>&amp;lt;i>m&amp;lt;/i>&amp;lt;/font></item>
+        <item>lowercase, uppercase text of movement &amp;lt;font color=red>&amp;lt;i>m&amp;lt;/i>&amp;lt;/font></item>
+        <item>shift left, right text of movement &amp;lt;font color=red>&amp;lt;i>m&amp;lt;/i>&amp;lt;/font></item>
+        <item>shift &amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font> lines left, right</item>
+    </string-array>
+    <string-array name="descrip_array_key_mapping">
+        <item>map &amp;lt;font color=red>&amp;lt;i>c ↦ e&amp;lt;/i>&amp;lt;/font> in normal &amp;amp; visual mode</item>
+        <item>map &amp;lt;font color=red>&amp;lt;i>c ↦ e&amp;lt;/i>&amp;lt;/font> in insert &amp;amp; cmd-line mode</item>
+        <item>remove mapping &amp;lt;font color=red>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font></item>
+        <item>write current mappings, settings... to file &amp;lt;font color=red>&amp;lt;i>f&amp;lt;/i>&amp;lt;/font></item>
+        <item>add abbreviation for &amp;lt;font color=red>&amp;lt;i>c ↦ e&amp;lt;/i>&amp;lt;/font></item>
+        <item>show abbreviations starting with &amp;lt;font color=red>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font></item>
+        <item>remove abbreviation &amp;lt;font color=red>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font></item>
+    </string-array>
+    <string-array name="descrip_array_marks_motions">
+        <item>mark current position with mark &amp;lt;font color=red>&amp;lt;i>c ∈[a..Z]&amp;lt;/i>&amp;lt;/font></item>
+        <item>go to mark &amp;lt;font color=red>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font> in current, &amp;lt;font color=red>&amp;lt;i>C&amp;lt;/i>&amp;lt;/font> in any file</item>
+        <item>go to last exit position</item>
+        <item>go to position before jump, at last edit</item>
+        <item>go to start, end of previously operated text</item>
+        <item>print the active marks list</item>
+        <item>print the jump list</item>
+        <item>go to &amp;lt;font color=red>&amp;lt;i>nth&amp;lt;/i>&amp;lt;/font> older position in jump list</item>
+        <item>go to &amp;lt;font color=red>&amp;lt;i>nth&amp;lt;/i>&amp;lt;/font> newer position in jump list</item>
+    </string-array>
+    <string-array name="descrip_array_misc">
+        <item>start shell, execute command &amp;lt;font color=red>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font> in shell</item>
+        <item>lookup keyword under cursor with man</item>
+        <item>start make, read errors and jump to first</item>
+        <item>display the next, previous error</item>
+        <item>list all errors, read errors from file</item>
+        <item>redraw screen, show filename and position</item>
+        <item>show cursor column, line, and character position</item>
+        <item>show ASCII value of character under cursor</item>
+        <item>open file which filename is under cursor</item>
+        <item>redirect output to file &amp;lt;font color=red>&amp;lt;i>f&amp;lt;/i>&amp;lt;/font></item>
+        <item>save view configuration [to file &amp;lt;font color=red>&amp;lt;i>f&amp;lt;/i>&amp;lt;/font>]</item>
+        <item>load view configuration [from file &amp;lt;font color=red>&amp;lt;i>f&amp;lt;/i>&amp;lt;/font>]</item>
+        <item>unmapped keys</item>
+    </string-array>
+    <string-array name="descrip_array_offsets_search">
+        <item>&amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font> line downward in column 1</item>
+        <item>&amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font> line upward in column 1</item>
+        <item>&amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font> characters right, left to end of match</item>
+        <item>&amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font> characters right, left to start of match</item>
+        <item>execute search command &amp;lt;font color=red>&amp;lt;i>sc&amp;lt;/i>&amp;lt;/font> next</item>
+    </string-array>
+    <string-array name="descrip_array_scrolling">
+        <item>scroll line up, down</item>
+        <item>scroll half a page up, down</item>
+        <item>scroll page up, down</item>
+        <item>set current line at top of window</item>
+        <item>set current line at center of window</item>
+        <item>set current line at bottom of window</item>
+        <item>scroll one character to the right, left</item>
+        <item>scroll half a screen to the right, left</item>
+        <item>split window in two</item>
+        <item>create new empty window</item>
+        <item>make current window one on screen</item>
+        <item>move to window below, above</item>
+        <item>move to window below, above (wrap)</item>
+    </string-array>
+    <string-array name="descrip_array_search_sub">
+        <item>search forward, backward for &amp;lt;font color=red>&amp;lt;i>s&amp;lt;/i>&amp;lt;/font></item>
+        <item>search fwd, bwd for &amp;lt;font color=red>&amp;lt;i>s&amp;lt;/i>&amp;lt;/font> with offset &amp;lt;font color=red>&amp;lt;i>o&amp;lt;/i>&amp;lt;/font></item>
+        <item>repeat forward last search</item>
+        <item>repeat backward last search</item>
+        <item>search backward, forward for word under cursor</item>
+        <item>same, but also find partial matches</item>
+        <item>local, global definition of symbol under cursor</item>
+        <item>substitute &amp;lt;font color=red>&amp;lt;i>f&amp;lt;/i>&amp;lt;/font> by &amp;lt;font color=red>&amp;lt;i>t&amp;lt;/i>&amp;lt;/font> in range &amp;lt;font color=red>&amp;lt;i>r&amp;lt;/i>&amp;lt;/font>\u0009\u0009&amp;lt;font color=red>&amp;lt;i>x&amp;lt;/i>&amp;lt;/font>: g-all occurrences, c-confirm changes</item>
+        <item>repeat substitution with new &amp;lt;font color=red>&amp;lt;i>r&amp;lt;/i>&amp;lt;/font> &amp;amp; &amp;lt;font color=red>&amp;lt;i>x&amp;lt;/i>&amp;lt;/font></item>
+    </string-array>
+    <string-array name="descrip_array_special_char_search">
+        <item>any single character, start, end of line</item>
+        <item>start, end of word</item>
+        <item>a single character in range &amp;lt;font color=red>&amp;lt;i>c1..c2&amp;lt;/i>&amp;lt;/font></item>
+        <item>a single character not in range</item>
+        <item>an identifier, keyword; excl. digits</item>
+        <item>a file name, printable char.; excl. digits</item>
+        <item>a white space, a non-white space</item>
+        <item>esc, tab, ↵, ←</item>
+        <item>match &amp;lt;font color=red>&amp;lt;i>0..1&amp;lt;/i>&amp;lt;/font>, &amp;lt;font color=red>&amp;lt;i>0..∞&amp;lt;/i>&amp;lt;/font>, &amp;lt;font color=red>&amp;lt;i>1..∞&amp;lt;/i>&amp;lt;/font> of preceding atoms</item>
+        <item>separate two branches ( &amp;lt;font color=red>&amp;lt;i>≡&amp;lt;/i>&amp;lt;/font> or)</item>
+        <item>group patterns into an atom</item>
+        <item>the whole matched pattern, &amp;lt;font color=red>&amp;lt;i>nth&amp;lt;/i>&amp;lt;/font> () group</item>
+        <item>next character made upper, lowercase</item>
+        <item>ignore, match case on next pattern</item>
+    </string-array>
+    <string-array name="descrip_array_tags">
+        <item>jump to tag &amp;lt;font color=red>&amp;lt;i>t&amp;lt;/i>&amp;lt;/font></item>
+        <item>jump to &amp;lt;font color=red>&amp;lt;i>nth&amp;lt;/i>&amp;lt;/font> newer tag in list</item>
+        <item>jump to the tag under cursor, return from tag</item>
+        <item>list matching tags and select one for jump</item>
+        <item>jump to tag or select one if multiple matches</item>
+        <item>print tag list</item>
+        <item>jump back from, to &amp;lt;font color=red>&amp;lt;i>nth&amp;lt;/i>&amp;lt;/font> older tag</item>
+        <item>jump to last matching tag</item>
+        <item>preview tag under cursor, tag &amp;lt;font color=red>&amp;lt;i>t&amp;lt;/i>&amp;lt;/font></item>
+        <item>split window and show tag under cursor</item>
+        <item>close tag preview window</item>
+    </string-array>
+    <string-array name="descrip_array_undoing">
+        <item>undo last command, restore last changed line</item>
+        <item>repeat last changes, redo last undo</item>
+        <item>repeat last changes with count replaced by &amp;lt;font color=red>&amp;lt;i>n&amp;lt;/i>&amp;lt;/font></item>
+        <item>record, append typed characters in register &amp;lt;font color=red>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font></item>
+        <item>stop recording</item>
+        <item>execute the content of register &amp;lt;font color=red>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font></item>
+        <item>repeat previous @ command</item>
+        <item>execute register c as an Ex command</item>
+        <item>execute Ex command &amp;lt;font color=red>&amp;lt;i>c&amp;lt;/i>&amp;lt;/font> on range &amp;lt;font color=red>&amp;lt;i>r&amp;lt;/i>&amp;lt;/font> where pattern &amp;lt;font color=red>&amp;lt;i>p&amp;lt;/i>&amp;lt;/font> matches</item>
+    </string-array>
+    <string-array name="descrip_array_visual_mode">
+        <item>start/stop highlighting characters, lines, block</item>
+        <item>exchange cursor position with start of highlighting</item>
+        <item>start highlighting on previous visual area</item>
+        <item>select a word, a sentence, a paragraph</item>
+        <item>select a block ( ), a block { }</item>
+    </string-array>
+    <string-array name="header_array">
+        <item>Basic Movements</item>
+        <item>Insertion &amp;amp; replace</item>
+        <item>Deletion</item>
+        <item>Insert mode</item>
+        <item>Copying</item>
+        <item>Advanced insertion</item>
+        <item>Visual mode</item>
+        <item>Undoing, repeating &amp;amp; registers</item>
+        <item>Complex movement</item>
+        <item>Search &amp;amp; substitute</item>
+        <item>Special characters in search patterns</item>
+        <item>Offsets in search commands</item>
+        <item>Marks and motions</item>
+        <item>Key mapping &amp;amp; abbreviations</item>
+        <item>Tags</item>
+        <item>Scrolling &amp;amp; multi-windowing</item>
+        <item>Ex commands</item>
+        <item>Ex ranges</item>
+        <item>Folding</item>
+        <item>Miscellaneous</item>
+    </string-array>
+    <string-array name="pref_example_list_titles">
+        <item>Always</item>
+        <item>When possible</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_example_list_values">
+        <item>1</item>
+        <item>0</item>
+        <item>-1</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>-1</item>
+    </string-array>
+</resources>
