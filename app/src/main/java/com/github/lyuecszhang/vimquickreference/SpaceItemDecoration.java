@@ -13,7 +13,7 @@ import android.view.View;
 
 public class SpaceItemDecoration extends ItemDecoration {
     private int space;
-
+    private String TAG = SpaceItemDecoration.class.getName();
     public SpaceItemDecoration(int space) {
         this.space = space;
     }
@@ -23,12 +23,12 @@ public class SpaceItemDecoration extends ItemDecoration {
                                RecyclerView.State state) {
         view.setElevation(2);
         if(isNotReachedBottom(parent, view)) {
-            Logcat.d("SpaceItemDecoration", "is not reached the bottom");
+            Logcat.d(TAG, "is not reached the bottom");
             outRect.top = space;
             outRect.right = space;
             outRect.left = space;
         } else {
-            Logcat.d("SpaceItemDecoration", "reached the bottom");
+            Logcat.d(TAG, "reached the bottom");
             outRect.top = space;
             outRect.bottom = space;
             outRect.right = space;

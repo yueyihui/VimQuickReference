@@ -11,7 +11,8 @@ public class MyViewHolder extends RecyclerView.ViewHolder {
     public MyViewHolder(View itemView) {
         super(itemView);
     }
+
     public int getTitleResourceId() {
-        return R.id.text1;
+        return R.id.title;
     }
 }

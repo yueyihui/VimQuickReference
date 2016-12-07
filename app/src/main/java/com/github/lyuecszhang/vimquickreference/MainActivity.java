@@ -1,5 +1,6 @@
 package com.github.lyuecszhang.vimquickreference;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -12,8 +13,6 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.util.ArrayList;
-import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity {
     @Override
@@ -22,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        VimCmdCollections.loadVimCmds(this.getResources());
 
         initRecyclerView();
 
@@ -36,15 +37,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initRecyclerView() {
-        String[] data = getResources().getStringArray(R.array.header_array);
-        ArrayList<String> list = new ArrayList<String>();
-        Collections.addAll(list, data);
         int spacingInPixels = getResources().
                 getDimensionPixelSize(R.dimen.recycler_view_item_view_marge);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.main_page_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new SpaceItemDecoration(spacingInPixels));
-        recyclerView.setAdapter(new ArrayListAdapter(this, list));
+        recyclerView.setAdapter(new ArrayListAdapter(this, VimCmdCollections.getVimTitle()));
+    }
+
+    @Override //depends on ArrayListAdapater::onBindViewHolder
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
