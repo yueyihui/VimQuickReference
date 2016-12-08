@@ -4,6 +4,8 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.animation.RectEvaluator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
@@ -25,6 +27,8 @@ import org.w3c.dom.Text;
 
 import java.util.List;
 
+import static android.view.View.LAYER_TYPE_HARDWARE;
+
 /**
  * Created by yue_liang on 2016/12/4.
  */
@@ -34,6 +38,8 @@ public class ArrayListAdapter extends RecyclerView.Adapter<MyViewHolder> {
     private List<String> mDataList;
     private String[] mDataString;
     private String TAG = ArrayListAdapter.class.getName();
+    private float maskElevation;
+    private boolean mExtended;
 
     public ArrayListAdapter(Context context, List<String> data) {
         mContext = context;
@@ -52,13 +58,21 @@ public class ArrayListAdapter extends RecyclerView.Adapter<MyViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, final int position) {
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
         Spanned spanned = Html.fromHtml(mDataString[position]);
         Spanned str = Html.fromHtml(spanned.toString());
         TextView textView = (TextView) holder.itemView.findViewById(holder.getTitleResourceId());
         textView.setText(str);
         textView.setTag(position);
+
         textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.itemView.performClick();
+            }
+        });
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                Intent intent = new Intent(mContext, VimCmdActivity.class);
@@ -68,58 +82,59 @@ public class ArrayListAdapter extends RecyclerView.Adapter<MyViewHolder> {
             }
         });
     }
+
     private void activateAwareMotion(View target) {
-        final CardView top = (CardView) ((MainActivity) mContext).findViewById(R.id.top);
+        final CardView topCardView = (CardView) ((MainActivity) mContext).findViewById(R.id.top);
 
-        Rect bounds = new Rect();
-        Rect topBounds = new Rect();
-        target.getDrawingRect(bounds);
-        top.getDrawingRect(topBounds);
+        //target.setEnabled(false);
 
-        Logcat.d(TAG, bounds.flattenToString());
+        // Coordinates of circle initial point
+        final ViewGroup parent = (ViewGroup) topCardView.getParent();
+        final Rect targetBounds = new Rect();
+        final Rect topCardInitBounds = new Rect();
+        target.getDrawingRect(targetBounds);
+        topCardView.getDrawingRect(topCardInitBounds);
+        parent.offsetDescendantRectToMyCoords(target, targetBounds);
+        parent.offsetDescendantRectToMyCoords(topCardView, topCardInitBounds);
 
-        FrameLayout rl = (FrameLayout) ((MainActivity) mContext).
-                findViewById(R.id.content_main);
+        // Put Mask view at circle initial points
+        maskElevation = topCardView.getCardElevation();
+        topCardView.setVisibility(View.VISIBLE);
+        topCardView.setTranslationY(targetBounds.centerY() - topCardInitBounds.centerY());
 
-        rl.offsetDescendantRectToMyCoords(target, bounds);
-        rl.offsetDescendantRectToMyCoords(target, topBounds);
+        ((RecyclerView) target.getParent()).setVisibility(View.INVISIBLE);
 
-        top.setCardElevation(0);
-        top.setVisibility(View.VISIBLE);
-        top.setX(bounds.left - topBounds.centerX());
-        top.setY(bounds.top - topBounds.centerY());
-
-        ((MainActivity) mContext).findViewById(R.id.main_page_recycler_view)
-                .setVisibility(View.INVISIBLE);
-
-        final int cX = bounds.centerX();
-        final int cY = bounds.centerY();
-
+        float a = (float) Math.hypot(topCardInitBounds.width() * .5f,
+                topCardInitBounds.height() * .5f);//√（x²+y²）
         Animator circularReveal =
-                ViewAnimationUtils.createCircularReveal(top, cX, cY, target.getWidth() / 2,
-                        (float) Math.hypot(topBounds.width() * .5f, topBounds.height() * .5f));
+                ViewAnimationUtils.createCircularReveal(topCardView,
+                        topCardInitBounds.centerX(),
+                        topCardInitBounds.centerY(),
+                        target.getHeight() / 2,
+                        a);
+        ValueAnimator pathAnimator = ValueAnimator.
+                ofFloat(targetBounds.centerY() - topCardInitBounds.centerY(), 1).setDuration(1000);
+        pathAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
-        final float c0X = bounds.centerX() - topBounds.centerX();
-        final float c0Y = bounds.centerY() - topBounds.centerY();
-
-        AnimatorPath path = new AnimatorPath();
-        path.moveTo(c0X, c0Y);
-        path.curveTo(c0X, c0Y, 0, c0Y, 0, 0);
-
-        ObjectAnimator pathAnimator = ObjectAnimator.ofObject(this, "maskLocation", new PathEvaluator(),
-                path.getPoints().toArray());
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                topCardView.setTranslationY((float) animation.getAnimatedValue());
+            }
+        });
 
         AnimatorSet set = new AnimatorSet();
         set.playTogether(circularReveal, pathAnimator);
         set.setInterpolator(new FastOutSlowInInterpolator());
-        set.setDuration(1500);
+        set.setDuration(1000);
         set.addListener(new AnimatorListenerAdapter() {
             @Override public void onAnimationEnd(Animator animation) {
-                top.setCardElevation(2);
+                mExtended = true;
+                topCardView.setTranslationY(0);
             }
         });
         set.start();
     }
+
     @Override
     public int getItemCount() {
         return mDataString.length;
