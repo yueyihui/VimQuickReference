@@ -1,4 +1,4 @@
-package com.github.lyuecszhang.vimquickreference;
+package com.github.yueliang;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

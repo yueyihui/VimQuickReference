@@ -1,10 +1,8 @@
-package com.github.lyuecszhang.vimquickreference;
+package com.github.yueliang;
 
 import android.graphics.Rect;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ItemDecoration;
-import android.util.Log;
 import android.view.View;
 
 /**

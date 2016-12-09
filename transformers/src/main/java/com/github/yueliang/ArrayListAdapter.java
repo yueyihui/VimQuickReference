@@ -1,9 +1,10 @@
-package com.github.lyuecszhang.vimquickreference;
+package com.github.yueliang;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
@@ -24,7 +25,7 @@ import java.util.List;
  */
 
 public class ArrayListAdapter extends RecyclerView.Adapter<MyViewHolder> {
-    private Context mContext;
+    private Activity mActivity;
     private List<String> mDataList;
     private String[] mDataString;
     private String TAG = ArrayListAdapter.class.getName();
@@ -33,19 +34,19 @@ public class ArrayListAdapter extends RecyclerView.Adapter<MyViewHolder> {
     private float mCardOffsetDistance;
     private int selectedChildPosition;
 
-    public ArrayListAdapter(Context context, List<String> data) {
-        mContext = context;
+    public ArrayListAdapter(Activity activity, List<String> data) {
+        mActivity = activity;
         mDataList = data;
     }
 
-    public ArrayListAdapter(Context context, String[] data) {
-        mContext = context;
+    public ArrayListAdapter(Activity activity, String[] data) {
+        mActivity = activity;
         mDataString = data;
     }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new MyViewHolder(LayoutInflater.from(mContext).
+        return new MyViewHolder(LayoutInflater.from(mActivity).
                 inflate(R.layout.item_view, parent, false));
     }
 
@@ -67,9 +68,6 @@ public class ArrayListAdapter extends RecyclerView.Adapter<MyViewHolder> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(mContext, VimCmdActivity.class);
-//                intent.putExtra(VimCmdCollections.CURRENT_POSITION, position);
-//                ((MainActivity) mContext).startActivityForResult(intent, position);
                 selectedChildPosition = position;
                 activateAwareMotion(v);
             }
@@ -77,7 +75,7 @@ public class ArrayListAdapter extends RecyclerView.Adapter<MyViewHolder> {
     }
 
     private void activateAwareMotion(View target) {
-        final CardView topCardView = (CardView) ((MainActivity) mContext).findViewById(R.id.top);
+        final CardView topCardView = (CardView) mActivity.findViewById(R.id.top);
         final RecyclerView recyclerView = ((RecyclerView) target.getParent());
 
         // Coordinates of circle initial point
@@ -138,10 +136,9 @@ public class ArrayListAdapter extends RecyclerView.Adapter<MyViewHolder> {
     }
 
     public void reset() {
-        final CardView topCardView = (CardView) ((MainActivity) mContext).findViewById(R.id.top);
-        final RecyclerView recyclerView = (RecyclerView)
-                ((MainActivity) mContext).
-                        findViewById(R.id.main_page_recycler_view);
+        final CardView topCardView = (CardView) mActivity.findViewById(R.id.top);
+        final RecyclerView recyclerView = (RecyclerView) mActivity.
+                findViewById(R.id.main_page_recycler_view);
 
         Rect topCardBounds = new Rect();
         topCardView.getDrawingRect(topCardBounds);

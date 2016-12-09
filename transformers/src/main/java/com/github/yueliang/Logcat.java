@@ -1,4 +1,4 @@
-package com.github.lyuecszhang.vimquickreference;
+package com.github.yueliang;
 
 import android.os.Debug;
 import android.util.Log;
