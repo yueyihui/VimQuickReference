@@ -16,9 +16,8 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import java.util.List;
 
-import static android.view.View.LAYER_TYPE_HARDWARE;
+import java.util.List;
 
 /**
  * Created by yue_liang on 2016/12/4.
@@ -30,8 +29,10 @@ public class ArrayListAdapter extends RecyclerView.Adapter<MyViewHolder> {
     private String[] mDataString;
     private String TAG = ArrayListAdapter.class.getName();
     private boolean mExtended;
+    private boolean mIsAnimating;
     private float mCardOffsetDistance;
     private int selectedChildPosition;
+
     public ArrayListAdapter(Context context, List<String> data) {
         mContext = context;
         mDataList = data;
@@ -77,6 +78,7 @@ public class ArrayListAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
     private void activateAwareMotion(View target) {
         final CardView topCardView = (CardView) ((MainActivity) mContext).findViewById(R.id.top);
+        final RecyclerView recyclerView = ((RecyclerView) target.getParent());
 
         // Coordinates of circle initial point
         final ViewGroup parent = (ViewGroup) topCardView.getParent();
@@ -88,12 +90,7 @@ public class ArrayListAdapter extends RecyclerView.Adapter<MyViewHolder> {
         parent.offsetDescendantRectToMyCoords(topCardView, topCardInitBounds);
 
         mCardOffsetDistance = targetBounds.centerY() - topCardInitBounds.centerY();
-        Logcat.d(TAG,"activateAwareMotion mCardOffsetDistance = " + mCardOffsetDistance);
-        // Put Mask view at circle initial points
-        topCardView.setVisibility(View.VISIBLE);
-        topCardView.setTranslationY(mCardOffsetDistance);
-
-        ((RecyclerView) target.getParent()).setVisibility(View.INVISIBLE);
+        Logcat.d(TAG, "activateAwareMotion mCardOffsetDistance = " + mCardOffsetDistance);
 
         float a = (float) Math.hypot(topCardInitBounds.width() * .5f,
                 topCardInitBounds.height() * .5f);//√（x²+y²）
@@ -111,7 +108,7 @@ public class ArrayListAdapter extends RecyclerView.Adapter<MyViewHolder> {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 float offsetY = (float) animation.getAnimatedValue();
-                Logcat.d(TAG,"activateAwareMotion ValueAnimator offsetY = " + offsetY);
+                Logcat.d(TAG, "activateAwareMotion ValueAnimator offsetY = " + offsetY);
                 topCardView.setTranslationY(offsetY);
             }
         });
@@ -121,11 +118,23 @@ public class ArrayListAdapter extends RecyclerView.Adapter<MyViewHolder> {
         set.setInterpolator(new FastOutSlowInInterpolator());
         set.setDuration(300);
         set.addListener(new AnimatorListenerAdapter() {
-            @Override public void onAnimationEnd(Animator animation) {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                mIsAnimating = true;
+                recyclerView.setVisibility(View.INVISIBLE);
+                topCardView.setVisibility(View.VISIBLE);
+                topCardView.setTranslationY(mCardOffsetDistance);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mIsAnimating = false;
                 mExtended = true;
             }
         });
-        set.start();
+        if (!isAnimating()) {
+            set.start();
+        }
     }
 
     public void reset() {
@@ -133,7 +142,6 @@ public class ArrayListAdapter extends RecyclerView.Adapter<MyViewHolder> {
         final RecyclerView recyclerView = (RecyclerView)
                 ((MainActivity) mContext).
                         findViewById(R.id.main_page_recycler_view);
-        recyclerView .setVisibility(View.VISIBLE);
 
         Rect topCardBounds = new Rect();
         topCardView.getDrawingRect(topCardBounds);
@@ -145,9 +153,9 @@ public class ArrayListAdapter extends RecyclerView.Adapter<MyViewHolder> {
                         topCardBounds.centerX(),
                         topCardBounds.centerY(),
                         a,
-                        recyclerView.getChildAt(selectedChildPosition).getHeight()/2);
+                        0);
 
-        Logcat.d(TAG,"reset mCardOffsetDistance = " + mCardOffsetDistance);
+        Logcat.d(TAG, "reset mCardOffsetDistance = " + mCardOffsetDistance);
         ValueAnimator pathAnimator = ValueAnimator.
                 ofFloat(0, mCardOffsetDistance);
         pathAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -155,7 +163,7 @@ public class ArrayListAdapter extends RecyclerView.Adapter<MyViewHolder> {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 float offsetY = (float) animation.getAnimatedValue();
-                Logcat.d(TAG,"reset ValueAnimator offsetY = " + offsetY);
+                Logcat.d(TAG, "reset ValueAnimator offsetY = " + offsetY);
                 topCardView.setTranslationY(offsetY);
             }
         });
@@ -164,12 +172,26 @@ public class ArrayListAdapter extends RecyclerView.Adapter<MyViewHolder> {
         set.setInterpolator(new FastOutSlowInInterpolator());
         set.setDuration(300);
         set.addListener(new AnimatorListenerAdapter() {
-            @Override public void onAnimationEnd(Animator animation) {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                mIsAnimating = true;
+                recyclerView.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mIsAnimating = false;
                 mExtended = false;
                 topCardView.setVisibility(View.INVISIBLE);
             }
         });
-        set.start();
+        if (!isAnimating()) {
+            set.start();
+        }
+    }
+
+    public boolean isAnimating() {
+        return mIsAnimating;
     }
 
     public boolean getExtendState() {

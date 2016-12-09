@@ -40,8 +40,10 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.main_page_recycler_view);
         ArrayListAdapter adapter = (ArrayListAdapter) recyclerView.getAdapter();
-        if(adapter.getExtendState()) {
+        if (adapter.getExtendState()) {
             adapter.reset();
+        } else if(adapter.isAnimating()) {
+            //do nothing, if remove else if, will encounter exit activity when animating
         } else {
             super.onBackPressed();
         }
