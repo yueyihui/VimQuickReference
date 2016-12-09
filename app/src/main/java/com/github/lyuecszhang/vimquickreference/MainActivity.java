@@ -36,6 +36,17 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.main_page_recycler_view);
+        ArrayListAdapter adapter = (ArrayListAdapter) recyclerView.getAdapter();
+        if(adapter.getExtendState()) {
+            adapter.reset();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     private void initRecyclerView() {
         int spacingInPixels = getResources().
                 getDimensionPixelSize(R.dimen.recycler_view_item_view_marge);
