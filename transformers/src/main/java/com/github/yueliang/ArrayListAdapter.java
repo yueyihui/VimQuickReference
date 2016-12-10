@@ -7,6 +7,7 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
+import android.os.Debug;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -83,10 +84,13 @@ public class ArrayListAdapter extends RecyclerView.Adapter<MyViewHolder> {
         final Rect targetBounds = new Rect();
         final Rect topCardInitBounds = new Rect();
         target.getDrawingRect(targetBounds);
+        Logcat.d(TAG, "before offsetDescendantRectToMyCoords targetBounds = " + targetBounds
+                .flattenToString());
         topCardView.getDrawingRect(topCardInitBounds);
         parent.offsetDescendantRectToMyCoords(target, targetBounds);
         parent.offsetDescendantRectToMyCoords(topCardView, topCardInitBounds);
-
+        Logcat.d(TAG, "after offsetDescendantRectToMyCoords targetBounds = " + targetBounds
+                .flattenToString());
         mCardOffsetDistance = targetBounds.centerY() - topCardInitBounds.centerY();
         Logcat.d(TAG, "activateAwareMotion mCardOffsetDistance = " + mCardOffsetDistance);
 
@@ -119,7 +123,9 @@ public class ArrayListAdapter extends RecyclerView.Adapter<MyViewHolder> {
             @Override
             public void onAnimationStart(Animator animation) {
                 mIsAnimating = true;
-                recyclerView.setVisibility(View.INVISIBLE);
+                if (!Debug.isDebuggerConnected()) {
+                    recyclerView.setVisibility(View.INVISIBLE);
+                }
                 topCardView.setVisibility(View.VISIBLE);
                 topCardView.setTranslationY(mCardOffsetDistance);
             }
@@ -128,10 +134,71 @@ public class ArrayListAdapter extends RecyclerView.Adapter<MyViewHolder> {
             public void onAnimationEnd(Animator animation) {
                 mIsAnimating = false;
                 mExtended = true;
+                if (Debug.isDebuggerConnected()) {
+                    topCardView.setVisibility(View.INVISIBLE);
+                }
+                transformChildRecyclerView(topCardInitBounds);
             }
         });
         if (!isAnimating()) {
             set.start();
+        }
+    }
+
+    private void transformChildRecyclerView(Rect topCardRect) {
+        final RecyclerView main = (RecyclerView) mActivity.findViewById(R.id
+                .main_page_recycler_view);
+        Logcat.d("TAG", "transformChildRecyclerView param topCardRect = " +
+                topCardRect.flattenToString());
+        //recyclerView was defined android:layout_height="match_parent",
+        //that's mean is that it only drawing the Rect equivalent to sum of Rect of it's child view.
+        //so we using height to calculate how long need to rising up.
+        final float moveUp = topCardRect.bottom - main.getHeight();
+        if (Debug.isDebuggerConnected()) {
+            main.setTranslationY(moveUp);
+            Logcat.d(TAG, "recyclerView move up = " + moveUp);
+            main.setVisibility(View.VISIBLE);
+        }
+        ValueAnimator pathAnimator = ValueAnimator.
+                ofFloat(moveUp, topCardRect.bottom);
+        pathAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float offsetY = (float) animation.getAnimatedValue();
+                Logcat.d(TAG, "activateAwareMotion ValueAnimator offsetY = " + offsetY);
+                main.setTranslationY(offsetY);
+            }
+        });
+        if (Debug.isDebuggerConnected()) {
+            pathAnimator.setStartDelay(3000);
+            pathAnimator.setDuration(3000);
+            pathAnimator.start();
+        } else {
+            AnimatorSet set = new AnimatorSet();
+            set.playTogether(pathAnimator);
+            set.setInterpolator(new FastOutSlowInInterpolator());
+            set.setDuration(1000);
+            set.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    main.setTranslationY(moveUp);
+                    Logcat.d(TAG, "recyclerView move up = " + moveUp);
+                    main.setVisibility(View.VISIBLE);
+                    mIsAnimating = true;
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mIsAnimating = false;
+                    ViewGroup.LayoutParams origin = main.getLayoutParams(); //重设置高度
+                    origin.height = -(int) moveUp;
+                    main.setLayoutParams(origin);
+                }
+            });
+            if (!isAnimating()) {
+                set.start();
+            }
         }
     }
 
