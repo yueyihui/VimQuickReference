@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Rect;
 import android.os.Debug;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
@@ -18,7 +17,6 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import java.util.List;
 
 /**
@@ -34,6 +32,9 @@ public class ArrayListAdapter extends RecyclerView.Adapter<MyViewHolder> {
     private boolean mIsAnimating;
     private float mCardOffsetDistance;
     private int selectedChildPosition;
+    private float mMoveUp;
+    private static int DROP_RISE_DURING = 500;
+    private static int CIRCULAR_REVEAL_DURING = 300;
 
     public ArrayListAdapter(Activity activity, List<String> data) {
         mActivity = activity;
@@ -118,7 +119,7 @@ public class ArrayListAdapter extends RecyclerView.Adapter<MyViewHolder> {
         AnimatorSet set = new AnimatorSet();
         set.playTogether(circularReveal, pathAnimator);
         set.setInterpolator(new FastOutSlowInInterpolator());
-        set.setDuration(300);
+        set.setDuration(CIRCULAR_REVEAL_DURING);
         set.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
@@ -132,12 +133,10 @@ public class ArrayListAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                mIsAnimating = false;
-                mExtended = true;
                 if (Debug.isDebuggerConnected()) {
                     topCardView.setVisibility(View.INVISIBLE);
                 }
-                transformChildRecyclerView(topCardInitBounds);
+                dropDownRecyclerView(topCardInitBounds, recyclerView);
             }
         });
         if (!isAnimating()) {
@@ -145,29 +144,27 @@ public class ArrayListAdapter extends RecyclerView.Adapter<MyViewHolder> {
         }
     }
 
-    private void transformChildRecyclerView(Rect topCardRect) {
-        final RecyclerView main = (RecyclerView) mActivity.findViewById(R.id
-                .main_page_recycler_view);
+    private void dropDownRecyclerView(final Rect topCardRect, final View recyclerView) {
         Logcat.d("TAG", "transformChildRecyclerView param topCardRect = " +
                 topCardRect.flattenToString());
         //recyclerView was defined android:layout_height="match_parent",
         //that's mean is that it only drawing the Rect equivalent to sum of Rect of it's child view.
         //so we using height to calculate how long need to rising up.
-        final float moveUp = topCardRect.bottom - main.getHeight();
+        mMoveUp = topCardRect.bottom - recyclerView.getHeight();
         if (Debug.isDebuggerConnected()) {
-            main.setTranslationY(moveUp);
-            Logcat.d(TAG, "recyclerView move up = " + moveUp);
-            main.setVisibility(View.VISIBLE);
+            recyclerView.setTranslationY(mMoveUp);
+            Logcat.d(TAG, "recyclerView move up = " + mMoveUp);
+            recyclerView.setVisibility(View.VISIBLE);
         }
         ValueAnimator pathAnimator = ValueAnimator.
-                ofFloat(moveUp, topCardRect.bottom);
+                ofFloat(mMoveUp, topCardRect.bottom);
         pathAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 float offsetY = (float) animation.getAnimatedValue();
                 Logcat.d(TAG, "activateAwareMotion ValueAnimator offsetY = " + offsetY);
-                main.setTranslationY(offsetY);
+                recyclerView.setTranslationY(offsetY);
             }
         });
         if (Debug.isDebuggerConnected()) {
@@ -178,35 +175,69 @@ public class ArrayListAdapter extends RecyclerView.Adapter<MyViewHolder> {
             AnimatorSet set = new AnimatorSet();
             set.playTogether(pathAnimator);
             set.setInterpolator(new FastOutSlowInInterpolator());
-            set.setDuration(1000);
+            set.setDuration(DROP_RISE_DURING);
             set.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationStart(Animator animation) {
-                    main.setTranslationY(moveUp);
-                    Logcat.d(TAG, "recyclerView move up = " + moveUp);
-                    main.setVisibility(View.VISIBLE);
-                    mIsAnimating = true;
+                    recyclerView.setTranslationY(mMoveUp);
+                    Logcat.d(TAG, "recyclerView move up = " + mMoveUp);
+                    recyclerView.setVisibility(View.VISIBLE);
                 }
 
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     mIsAnimating = false;
-                    ViewGroup.LayoutParams origin = main.getLayoutParams(); //重设置高度
-                    origin.height = -(int) moveUp;
-                    main.setLayoutParams(origin);
+                    mExtended = true;
+                    ViewGroup.LayoutParams origin = recyclerView.getLayoutParams(); //重设置高度
+                    origin.height = -(int) mMoveUp;
+                    recyclerView.setLayoutParams(origin);
                 }
             });
-            if (!isAnimating()) {
-                set.start();
-            }
+            set.start();
         }
     }
 
     public void reset() {
-        final CardView topCardView = (CardView) mActivity.findViewById(R.id.top);
         final RecyclerView recyclerView = (RecyclerView) mActivity.
                 findViewById(R.id.main_page_recycler_view);
 
+        final CardView topCardView = (CardView) mActivity.findViewById(R.id.top);
+
+        ValueAnimator pathAnimator = ValueAnimator.
+                ofFloat(topCardView.getBottom(), mMoveUp);
+        pathAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float offsetY = (float) animation.getAnimatedValue();
+                recyclerView.setTranslationY(offsetY);
+            }
+        });
+        AnimatorSet set = new AnimatorSet();
+        set.playTogether(pathAnimator);
+        set.setInterpolator(new FastOutSlowInInterpolator());
+        set.setDuration(DROP_RISE_DURING);
+        set.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                mIsAnimating = true;
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                ViewGroup.LayoutParams params = recyclerView.getLayoutParams();
+                params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                recyclerView.setLayoutParams(params);
+                recyclerView.setTranslationY(params.height);
+                resetTopCardView(topCardView, recyclerView);
+            }
+        });
+        if (!isAnimating()) {
+            set.start();
+        }
+    }
+
+    private void resetTopCardView(final View topCardView, final View recyclerView) {
         Rect topCardBounds = new Rect();
         topCardView.getDrawingRect(topCardBounds);
 
@@ -227,31 +258,24 @@ public class ArrayListAdapter extends RecyclerView.Adapter<MyViewHolder> {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 float offsetY = (float) animation.getAnimatedValue();
-                Logcat.d(TAG, "reset ValueAnimator offsetY = " + offsetY);
+                Logcat.d(TAG, "raiseUpRecyclerView ValueAnimator offsetY = " + offsetY);
                 topCardView.setTranslationY(offsetY);
             }
         });
         AnimatorSet set = new AnimatorSet();
         set.playTogether(circularReveal, pathAnimator);
         set.setInterpolator(new FastOutSlowInInterpolator());
-        set.setDuration(300);
+        set.setDuration(CIRCULAR_REVEAL_DURING);
         set.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                mIsAnimating = true;
-                recyclerView.setVisibility(View.VISIBLE);
-            }
-
             @Override
             public void onAnimationEnd(Animator animation) {
                 mIsAnimating = false;
                 mExtended = false;
                 topCardView.setVisibility(View.INVISIBLE);
+                recyclerView.setVisibility(View.VISIBLE);
             }
         });
-        if (!isAnimating()) {
-            set.start();
-        }
+        set.start();
     }
 
     public boolean isAnimating() {
