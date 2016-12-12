@@ -12,6 +12,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -28,13 +29,7 @@ public class ArrayListAdapter extends RecyclerView.Adapter<MyViewHolder> {
     private List<String> mDataList;
     private String[] mDataString;
     private String TAG = ArrayListAdapter.class.getName();
-    private boolean mExtended;
-    private boolean mIsAnimating;
-    private float mCardOffsetDistance;
-    private int selectedChildPosition;
-    private float mMoveUp;
-    private static int DROP_RISE_DURING = 500;
-    private static int CIRCULAR_REVEAL_DURING = 300;
+    private Transformer mTransformer;
 
     public ArrayListAdapter(Activity activity, List<String> data) {
         mActivity = activity;
@@ -44,6 +39,16 @@ public class ArrayListAdapter extends RecyclerView.Adapter<MyViewHolder> {
     public ArrayListAdapter(Activity activity, String[] data) {
         mActivity = activity;
         mDataString = data;
+    }
+
+    public void changeData(String[] data) {
+        mDataString = data;
+        this.notifyDataSetChanged();
+    }
+
+    public void changeData(List<String> dataList) {
+        mDataList = dataList;
+        this.notifyDataSetChanged();
     }
 
     @Override
@@ -56,7 +61,7 @@ public class ArrayListAdapter extends RecyclerView.Adapter<MyViewHolder> {
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         Spanned spanned = Html.fromHtml(mDataString[position]);
         Spanned str = Html.fromHtml(spanned.toString());
-        TextView textView = (TextView) holder.itemView.findViewById(holder.getTitleResourceId());
+        final TextView textView = (TextView) holder.itemView.findViewById(holder.getTitleResourceId());
         textView.setText(str);
         textView.setTag(position);
 
@@ -70,224 +75,25 @@ public class ArrayListAdapter extends RecyclerView.Adapter<MyViewHolder> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectedChildPosition = position;
-                activateAwareMotion(v);
+                mTransformer.activateAwareMotion(v, holder.getAdapterPosition());
             }
         });
-    }
-
-    private void activateAwareMotion(View target) {
-        final CardView topCardView = (CardView) mActivity.findViewById(R.id.top);
-        final RecyclerView recyclerView = ((RecyclerView) target.getParent());
-
-        // Coordinates of circle initial point
-        final ViewGroup parent = (ViewGroup) topCardView.getParent();
-        final Rect targetBounds = new Rect();
-        final Rect topCardInitBounds = new Rect();
-        target.getDrawingRect(targetBounds);
-        Logcat.d(TAG, "before offsetDescendantRectToMyCoords targetBounds = " + targetBounds
-                .flattenToString());
-        topCardView.getDrawingRect(topCardInitBounds);
-        parent.offsetDescendantRectToMyCoords(target, targetBounds);
-        parent.offsetDescendantRectToMyCoords(topCardView, topCardInitBounds);
-        Logcat.d(TAG, "after offsetDescendantRectToMyCoords targetBounds = " + targetBounds
-                .flattenToString());
-        mCardOffsetDistance = targetBounds.centerY() - topCardInitBounds.centerY();
-        Logcat.d(TAG, "activateAwareMotion mCardOffsetDistance = " + mCardOffsetDistance);
-
-        float a = (float) Math.hypot(topCardInitBounds.width() * .5f,
-                topCardInitBounds.height() * .5f);//√（x²+y²）
-        Animator circularReveal =
-                ViewAnimationUtils.createCircularReveal(topCardView,
-                        topCardInitBounds.centerX(),
-                        topCardInitBounds.centerY(),
-                        target.getHeight() / 2,
-                        a);
-
-        ValueAnimator pathAnimator = ValueAnimator.
-                ofFloat(mCardOffsetDistance, 0);
-        pathAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                float offsetY = (float) animation.getAnimatedValue();
-                Logcat.d(TAG, "activateAwareMotion ValueAnimator offsetY = " + offsetY);
-                topCardView.setTranslationY(offsetY);
-            }
-        });
-
-        AnimatorSet set = new AnimatorSet();
-        set.playTogether(circularReveal, pathAnimator);
-        set.setInterpolator(new FastOutSlowInInterpolator());
-        set.setDuration(CIRCULAR_REVEAL_DURING);
-        set.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                mIsAnimating = true;
-                if (!Debug.isDebuggerConnected()) {
-                    recyclerView.setVisibility(View.INVISIBLE);
-                }
-                topCardView.setVisibility(View.VISIBLE);
-                topCardView.setTranslationY(mCardOffsetDistance);
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                if (Debug.isDebuggerConnected()) {
-                    topCardView.setVisibility(View.INVISIBLE);
-                }
-                dropDownRecyclerView(topCardInitBounds, recyclerView);
-            }
-        });
-        if (!isAnimating()) {
-            set.start();
-        }
-    }
-
-    private void dropDownRecyclerView(final Rect topCardRect, final View recyclerView) {
-        Logcat.d("TAG", "transformChildRecyclerView param topCardRect = " +
-                topCardRect.flattenToString());
-        //recyclerView was defined android:layout_height="match_parent",
-        //that's mean is that it only drawing the Rect equivalent to sum of Rect of it's child view.
-        //so we using height to calculate how long need to rising up.
-        mMoveUp = topCardRect.bottom - recyclerView.getHeight();
-        if (Debug.isDebuggerConnected()) {
-            recyclerView.setTranslationY(mMoveUp);
-            Logcat.d(TAG, "recyclerView move up = " + mMoveUp);
-            recyclerView.setVisibility(View.VISIBLE);
-        }
-        ValueAnimator pathAnimator = ValueAnimator.
-                ofFloat(mMoveUp, topCardRect.bottom);
-        pathAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                float offsetY = (float) animation.getAnimatedValue();
-                Logcat.d(TAG, "activateAwareMotion ValueAnimator offsetY = " + offsetY);
-                recyclerView.setTranslationY(offsetY);
-            }
-        });
-        if (Debug.isDebuggerConnected()) {
-            pathAnimator.setStartDelay(3000);
-            pathAnimator.setDuration(3000);
-            pathAnimator.start();
-        } else {
-            AnimatorSet set = new AnimatorSet();
-            set.playTogether(pathAnimator);
-            set.setInterpolator(new FastOutSlowInInterpolator());
-            set.setDuration(DROP_RISE_DURING);
-            set.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationStart(Animator animation) {
-                    recyclerView.setTranslationY(mMoveUp);
-                    Logcat.d(TAG, "recyclerView move up = " + mMoveUp);
-                    recyclerView.setVisibility(View.VISIBLE);
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mIsAnimating = false;
-                    mExtended = true;
-                    ViewGroup.LayoutParams origin = recyclerView.getLayoutParams(); //重设置高度
-                    origin.height = -(int) mMoveUp;
-                    recyclerView.setLayoutParams(origin);
-                }
-            });
-            set.start();
-        }
-    }
-
-    public void reset() {
-        final RecyclerView recyclerView = (RecyclerView) mActivity.
-                findViewById(R.id.main_page_recycler_view);
-
-        final CardView topCardView = (CardView) mActivity.findViewById(R.id.top);
-
-        ValueAnimator pathAnimator = ValueAnimator.
-                ofFloat(topCardView.getBottom(), mMoveUp);
-        pathAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                float offsetY = (float) animation.getAnimatedValue();
-                recyclerView.setTranslationY(offsetY);
-            }
-        });
-        AnimatorSet set = new AnimatorSet();
-        set.playTogether(pathAnimator);
-        set.setInterpolator(new FastOutSlowInInterpolator());
-        set.setDuration(DROP_RISE_DURING);
-        set.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                mIsAnimating = true;
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                ViewGroup.LayoutParams params = recyclerView.getLayoutParams();
-                params.height = ViewGroup.LayoutParams.MATCH_PARENT;
-                recyclerView.setLayoutParams(params);
-                recyclerView.setTranslationY(params.height);
-                resetTopCardView(topCardView, recyclerView);
-            }
-        });
-        if (!isAnimating()) {
-            set.start();
-        }
-    }
-
-    private void resetTopCardView(final View topCardView, final View recyclerView) {
-        Rect topCardBounds = new Rect();
-        topCardView.getDrawingRect(topCardBounds);
-
-        float a = (float) Math.hypot(topCardBounds.width() * .5f,
-                topCardBounds.height() * .5f);//√（x²+y²）
-        Animator circularReveal =
-                ViewAnimationUtils.createCircularReveal(topCardView,
-                        topCardBounds.centerX(),
-                        topCardBounds.centerY(),
-                        a,
-                        0);
-
-        Logcat.d(TAG, "reset mCardOffsetDistance = " + mCardOffsetDistance);
-        ValueAnimator pathAnimator = ValueAnimator.
-                ofFloat(0, mCardOffsetDistance);
-        pathAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                float offsetY = (float) animation.getAnimatedValue();
-                Logcat.d(TAG, "raiseUpRecyclerView ValueAnimator offsetY = " + offsetY);
-                topCardView.setTranslationY(offsetY);
-            }
-        });
-        AnimatorSet set = new AnimatorSet();
-        set.playTogether(circularReveal, pathAnimator);
-        set.setInterpolator(new FastOutSlowInInterpolator());
-        set.setDuration(CIRCULAR_REVEAL_DURING);
-        set.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mIsAnimating = false;
-                mExtended = false;
-                topCardView.setVisibility(View.INVISIBLE);
-                recyclerView.setVisibility(View.VISIBLE);
-            }
-        });
-        set.start();
-    }
-
-    public boolean isAnimating() {
-        return mIsAnimating;
-    }
-
-    public boolean getExtendState() {
-        return mExtended;
     }
 
     @Override
     public int getItemCount() {
         return mDataString.length;
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        mTransformer = ((TransformRecyclerView) recyclerView).getTransformer();
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        mTransformer = null;
     }
 }

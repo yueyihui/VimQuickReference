@@ -14,9 +14,12 @@ import android.view.MenuItem;
 
 import com.github.yueliang.ArrayListAdapter;
 import com.github.yueliang.SpaceItemDecoration;
+import com.github.yueliang.TransformRecyclerView;
 
 
 public class MainActivity extends AppCompatActivity {
+    private TransformRecyclerView mRecyclerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,26 +41,25 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void initRecyclerView() {
+        int spacingInPixels = getResources().
+                getDimensionPixelSize(R.dimen.recycler_view_item_view_space);
+        mRecyclerView = (TransformRecyclerView) findViewById(R.id.main_page_recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.addItemDecoration(new SpaceItemDecoration(spacingInPixels));
+        mRecyclerView.setAdapter(new ArrayListAdapter(this, VimCmdCollections.getVimTitle()));
+    }
+
     @Override
     public void onBackPressed() {
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.main_page_recycler_view);
-        ArrayListAdapter adapter = (ArrayListAdapter) recyclerView.getAdapter();
-        if (adapter.getExtendState()) {
-            adapter.reset();
-        } else if(adapter.isAnimating()) {
+        if (!mRecyclerView.getTransformer().isAnimating() &&
+                mRecyclerView.getTransformer().getExtendState()) {
+            mRecyclerView.getTransformer().reset();
+        } else if(mRecyclerView.getTransformer().isAnimating()) {
             //do nothing, if remove else if, will encounter exit activity when animating
         } else {
             super.onBackPressed();
         }
-    }
-
-    private void initRecyclerView() {
-        int spacingInPixels = getResources().
-                getDimensionPixelSize(R.dimen.recycler_view_item_view_space);
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.main_page_recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.addItemDecoration(new SpaceItemDecoration(spacingInPixels));
-        recyclerView.setAdapter(new ArrayListAdapter(this, VimCmdCollections.getVimTitle()));
     }
 
     @Override //depends on ArrayListAdapater::onBindViewHolder
