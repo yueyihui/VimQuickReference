@@ -6,62 +6,84 @@ import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.graphics.Rect;
-import android.os.Debug;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 /**
- * Created by c_yiguoc on 16-12-12.
+ * Created by c_yuelia on 16-12-12.
  */
 
 public class Transformer {
+    public interface DownAnimationListener {
+        public void onStart(int selectedPosition);
+    }
+    private DownAnimationListener mDownAnimationListener;
     private Activity mActivity;
     private boolean mExtended;
     private boolean mIsAnimating;
     private float mCardOffsetDistance;
+    private float mStartRadius;
+    private float mEndRadius;
     private int mSelectedChildPosition;
     private float mMoveUp;
     private static int DROP_RISE_DURING = 500;
     private static int CIRCULAR_REVEAL_DURING = 300;
     private String TAG = Transformer.class.getName();
 
-    Transformer(Activity activity) {
+    private TextView mTextView;
+    private CardView mTopCardView;
+    private RecyclerView mMainRecyclerView;
+    private RecyclerView mNextRecyclerView;
+
+    public void setDownAnimationListener (DownAnimationListener downAnimationListener) {
+        mDownAnimationListener = downAnimationListener;
+    }
+
+    public Transformer(Activity activity) {
         mActivity = activity;
     }
 
-    void activateAwareMotion(View target, int selectedChildPosition) {
+    public void activateAwareMotion(View target, MainViewHolder holder,
+                             int selectedChildPosition) {
         mSelectedChildPosition = selectedChildPosition;
 
-        final CardView topCardView = (CardView) mActivity.findViewById(R.id.top);
-        final RecyclerView recyclerView = ((RecyclerView) target.getParent());
+        mTextView = holder.getTitleView();
+        mTextView.setVisibility(View.INVISIBLE);
+        mTopCardView = (CardView) mActivity.findViewById(R.id.top);
+        mMainRecyclerView = (RecyclerView) mActivity.findViewById(R.id.main_page_recycler_view);
+        mNextRecyclerView = (RecyclerView) mActivity.findViewById(R.id.next_page_recycler_view);
 
         // Coordinates of circle initial point
-        final ViewGroup parent = (ViewGroup) topCardView.getParent();
+        final ViewGroup parent = (ViewGroup) mTopCardView.getParent();
         final Rect targetBounds = new Rect();
         final Rect topCardInitBounds = new Rect();
         target.getDrawingRect(targetBounds);
         Logcat.d(TAG, "before offsetDescendantRectToMyCoords targetBounds = " + targetBounds
                 .flattenToString());
-        topCardView.getDrawingRect(topCardInitBounds);
+        mTopCardView.getDrawingRect(topCardInitBounds);
         parent.offsetDescendantRectToMyCoords(target, targetBounds);
-        parent.offsetDescendantRectToMyCoords(topCardView, topCardInitBounds);
+        parent.offsetDescendantRectToMyCoords(mTopCardView, topCardInitBounds);
         Logcat.d(TAG, "after offsetDescendantRectToMyCoords targetBounds = " + targetBounds
                 .flattenToString());
         mCardOffsetDistance = targetBounds.centerY() - topCardInitBounds.centerY();
         Logcat.d(TAG, "activateAwareMotion mCardOffsetDistance = " + mCardOffsetDistance);
 
-        float a = (float) Math.hypot(topCardInitBounds.width() * .5f,
+        mEndRadius = (float) Math.hypot(topCardInitBounds.width() * .5f,
                 topCardInitBounds.height() * .5f);//√（x²+y²）
+//        mStartRadius = (float) Math.hypot(mTextView.getWidth() * .5f,
+//                mTextView.getHeight() * .5f);//√（x²+y²）
+        mStartRadius = mTextView.getHeight() / 2;
         Animator circularReveal =
-                ViewAnimationUtils.createCircularReveal(topCardView,
+                ViewAnimationUtils.createCircularReveal(mTopCardView,
                         topCardInitBounds.centerX(),
                         topCardInitBounds.centerY(),
-                        target.getHeight() / 2,
-                        a);
+                        mStartRadius,
+                        mEndRadius);
 
         ValueAnimator pathAnimator = ValueAnimator.
                 ofFloat(mCardOffsetDistance, 0);
@@ -71,7 +93,7 @@ public class Transformer {
             public void onAnimationUpdate(ValueAnimator animation) {
                 float offsetY = (float) animation.getAnimatedValue();
                 Logcat.d(TAG, "activateAwareMotion ValueAnimator offsetY = " + offsetY);
-                topCardView.setTranslationY(offsetY);
+                mTopCardView.setTranslationY(offsetY);
             }
         });
 
@@ -83,19 +105,16 @@ public class Transformer {
             @Override
             public void onAnimationStart(Animator animation) {
                 mIsAnimating = true;
-                if (!Debug.isDebuggerConnected()) {
-                    recyclerView.setVisibility(View.INVISIBLE);
+                mTopCardView.setVisibility(View.VISIBLE);
+                if (!(mTopCardView.getTranslationY() == mCardOffsetDistance)) {
+                    mTopCardView.setTranslationY(mCardOffsetDistance);
                 }
-                topCardView.setVisibility(View.VISIBLE);
-                topCardView.setTranslationY(mCardOffsetDistance);
             }
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                if (Debug.isDebuggerConnected()) {
-                    topCardView.setVisibility(View.INVISIBLE);
-                }
-                dropDownRecyclerView(topCardInitBounds, recyclerView);
+                mMainRecyclerView.setVisibility(View.INVISIBLE);
+                dropDownRecyclerView(topCardInitBounds);
             }
         });
         if (!isAnimating()) {
@@ -103,18 +122,16 @@ public class Transformer {
         }
     }
 
-    private void dropDownRecyclerView(final Rect topCardRect, final View recyclerView) {
+    private void dropDownRecyclerView(final Rect topCardRect) {
         Logcat.d("TAG", "transformChildRecyclerView param topCardRect = " +
                 topCardRect.flattenToString());
         //recyclerView was defined android:layout_height="match_parent",
         //that's mean is that it only drawing the Rect equivalent to sum of Rect of it's child view.
         //so we using height to calculate how long need to rising up.
-        mMoveUp = topCardRect.bottom - recyclerView.getHeight();
-        if (Debug.isDebuggerConnected()) {
-            recyclerView.setTranslationY(mMoveUp);
-            Logcat.d(TAG, "recyclerView move up = " + mMoveUp);
-            recyclerView.setVisibility(View.VISIBLE);
-        }
+        //NOTICE: in the end the NextRecyclerView will change height of itself,
+        //so if use mMoveUp = topCardRect.bottom - mNextRecyclerView.getHeight();
+        //will get mMoveUp smaller and smaller
+        mMoveUp = topCardRect.bottom - mMainRecyclerView.getHeight();
         ValueAnimator pathAnimator = ValueAnimator.
                 ofFloat(mMoveUp, topCardRect.bottom);
         pathAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -123,14 +140,9 @@ public class Transformer {
             public void onAnimationUpdate(ValueAnimator animation) {
                 float offsetY = (float) animation.getAnimatedValue();
                 Logcat.d(TAG, "activateAwareMotion ValueAnimator offsetY = " + offsetY);
-                recyclerView.setTranslationY(offsetY);
+                mNextRecyclerView.setTranslationY(offsetY);
             }
         });
-        if (Debug.isDebuggerConnected()) {
-            pathAnimator.setStartDelay(3000);
-            pathAnimator.setDuration(3000);
-            pathAnimator.start();
-        } else {
             AnimatorSet set = new AnimatorSet();
             set.playTogether(pathAnimator);
             set.setInterpolator(new FastOutSlowInInterpolator());
@@ -138,38 +150,37 @@ public class Transformer {
             set.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationStart(Animator animation) {
-                    recyclerView.setTranslationY(mMoveUp);
+                    mNextRecyclerView.setTranslationY(mMoveUp);
+
                     Logcat.d(TAG, "recyclerView move up = " + mMoveUp);
-                    recyclerView.setVisibility(View.VISIBLE);
+                    ViewGroup.LayoutParams origin = mNextRecyclerView.getLayoutParams();
+                    origin.height = -(int) mMoveUp;
+                    mNextRecyclerView.setLayoutParams(origin);
+
+                    mNextRecyclerView.setVisibility(View.VISIBLE);
+                    if(mDownAnimationListener != null) {
+                        mDownAnimationListener.onStart(mSelectedChildPosition);
+                    }
                 }
 
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     mIsAnimating = false;
                     mExtended = true;
-                    ViewGroup.LayoutParams origin = recyclerView.getLayoutParams(); //重设置高度
-                    origin.height = -(int) mMoveUp;
-                    recyclerView.setLayoutParams(origin);
                 }
             });
             set.start();
-        }
     }
 
     public void reset() {
-        final RecyclerView recyclerView = (RecyclerView) mActivity.
-                findViewById(R.id.main_page_recycler_view);
-
-        final CardView topCardView = (CardView) mActivity.findViewById(R.id.top);
-
         ValueAnimator pathAnimator = ValueAnimator.
-                ofFloat(topCardView.getBottom(), mMoveUp);
+                ofFloat(mTopCardView.getBottom(), mMoveUp);
         pathAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 float offsetY = (float) animation.getAnimatedValue();
-                recyclerView.setTranslationY(offsetY);
+                mNextRecyclerView.setTranslationY(offsetY);
             }
         });
         AnimatorSet set = new AnimatorSet();
@@ -184,11 +195,9 @@ public class Transformer {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                ViewGroup.LayoutParams params = recyclerView.getLayoutParams();
-                params.height = ViewGroup.LayoutParams.MATCH_PARENT;
-                recyclerView.setLayoutParams(params);
-                recyclerView.setTranslationY(params.height);
-                resetTopCardView(topCardView, recyclerView);
+                mNextRecyclerView.setVisibility(View.GONE);
+                mMainRecyclerView.setVisibility(View.VISIBLE);
+                resetTopCardView();
             }
         });
         if (!isAnimating()) {
@@ -196,18 +205,16 @@ public class Transformer {
         }
     }
 
-    private void resetTopCardView(final View topCardView, final View recyclerView) {
+    private void resetTopCardView() {
         Rect topCardBounds = new Rect();
-        topCardView.getDrawingRect(topCardBounds);
+        mTopCardView.getDrawingRect(topCardBounds);
 
-        float a = (float) Math.hypot(topCardBounds.width() * .5f,
-                topCardBounds.height() * .5f);//√（x²+y²）
         Animator circularReveal =
-                ViewAnimationUtils.createCircularReveal(topCardView,
+                ViewAnimationUtils.createCircularReveal(mTopCardView,
                         topCardBounds.centerX(),
                         topCardBounds.centerY(),
-                        a,
-                        0);
+                        mEndRadius,
+                        mStartRadius);
 
         Logcat.d(TAG, "reset mCardOffsetDistance = " + mCardOffsetDistance);
         ValueAnimator pathAnimator = ValueAnimator.
@@ -218,7 +225,7 @@ public class Transformer {
             public void onAnimationUpdate(ValueAnimator animation) {
                 float offsetY = (float) animation.getAnimatedValue();
                 Logcat.d(TAG, "raiseUpRecyclerView ValueAnimator offsetY = " + offsetY);
-                topCardView.setTranslationY(offsetY);
+                mTopCardView.setTranslationY(offsetY);
             }
         });
         AnimatorSet set = new AnimatorSet();
@@ -230,8 +237,8 @@ public class Transformer {
             public void onAnimationEnd(Animator animation) {
                 mIsAnimating = false;
                 mExtended = false;
-                topCardView.setVisibility(View.INVISIBLE);
-                recyclerView.setVisibility(View.VISIBLE);
+                mTopCardView.setVisibility(View.INVISIBLE);
+                mTextView.setVisibility(View.VISIBLE);
             }
         });
         set.start();
@@ -241,7 +248,11 @@ public class Transformer {
         return mIsAnimating;
     }
 
-    public boolean getExtendState() {
+    public boolean isExtended() {
         return mExtended;
+    }
+
+    public int getSelectedChildPosition() {
+        return mSelectedChildPosition;
     }
 }

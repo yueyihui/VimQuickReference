@@ -11,15 +11,18 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import com.github.yueliang.ArrayListAdapter;
+import com.github.yueliang.MainArrayListAdapterAdapter;
+import com.github.yueliang.NextArrayListAdapterAdapter;
 import com.github.yueliang.SpaceItemDecoration;
-import com.github.yueliang.TransformRecyclerView;
+import com.github.yueliang.TransformTool;
+import com.github.yueliang.Transformer;
 
 
-public class MainActivity extends AppCompatActivity {
-    private TransformRecyclerView mRecyclerView;
-
+public class MainActivity extends AppCompatActivity implements TransformTool {
+    private RecyclerView mMainRecyclerView;
+    private RecyclerView mNextRecyclerView;
+    private Transformer transformer;
+    private static final String TAG = MainActivity.class.getName();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        VimCmdCollections.loadVimCmds(this.getResources());
+        VimCmdCollections.loadVimCmdsAndDescrip(this.getResources());
 
         initRecyclerView();
 
@@ -42,20 +45,41 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initRecyclerView() {
+        transformer = new Transformer(this);
         int spacingInPixels = getResources().
                 getDimensionPixelSize(R.dimen.recycler_view_item_view_space);
-        mRecyclerView = (TransformRecyclerView) findViewById(R.id.main_page_recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.addItemDecoration(new SpaceItemDecoration(spacingInPixels));
-        mRecyclerView.setAdapter(new ArrayListAdapter(this, VimCmdCollections.getVimTitle()));
+        mMainRecyclerView = (RecyclerView) findViewById(R.id.main_page_recycler_view);
+        mMainRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mMainRecyclerView.addItemDecoration(new SpaceItemDecoration(spacingInPixels));
+        mMainRecyclerView.setAdapter(new MainArrayListAdapterAdapter(this,
+                VimCmdCollections.getVimTitle()));
+
+        mNextRecyclerView = (RecyclerView) findViewById(R.id.next_page_recycler_view);
+        mNextRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mNextRecyclerView.addItemDecoration(new SpaceItemDecoration(spacingInPixels));
+        mNextRecyclerView.setAdapter(new NextArrayListAdapterAdapter(MainActivity.this));
+
+        transformer.setDownAnimationListener(new Transformer.DownAnimationListener() {
+            @Override
+            public void onStart(int selectedPosition) {
+                ((NextArrayListAdapterAdapter) mNextRecyclerView.getAdapter()).
+                        changeData(VimCmdCollections.getVimCmdDesByPosition(selectedPosition),
+                                VimCmdCollections.getVimCmdByPosition(selectedPosition));
+            }
+        });
+    }
+
+    @Override
+    public Transformer getTransformer() {
+        return transformer;
     }
 
     @Override
     public void onBackPressed() {
-        if (!mRecyclerView.getTransformer().isAnimating() &&
-                mRecyclerView.getTransformer().getExtendState()) {
-            mRecyclerView.getTransformer().reset();
-        } else if(mRecyclerView.getTransformer().isAnimating()) {
+        if (!transformer.isAnimating() &&
+                transformer.isExtended()) {
+            transformer.reset();
+        } else if(transformer.isAnimating()) {
             //do nothing, if remove else if, will encounter exit activity when animating
         } else {
             super.onBackPressed();
