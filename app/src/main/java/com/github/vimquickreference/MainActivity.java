@@ -1,4 +1,4 @@
-package com.github.lyuecszhang.vimquickreference;
+package com.github.vimquickreference;
 
 import android.content.Intent;
 import android.os.Bundle;
