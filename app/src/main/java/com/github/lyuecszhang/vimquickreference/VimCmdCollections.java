@@ -15,12 +15,13 @@ import java.util.Collections;
  */
 public class VimCmdCollections {
     private static SparseArray<String[]> mVimCmdCollections = new SparseArray<>();
+    private static SparseArray<String[]> mVimCmdDesCollections = new SparseArray<>();
     private static Resources mRes;
 
     public static String CURRENT_POSITION =
             "com.github.lyuecszhang.vimquickreference.current_position";
 
-    private enum VimCmd {
+    public enum VimCmd {
         BasicMovements,
         InsertionReplace,
         Deletion,
@@ -43,7 +44,7 @@ public class VimCmdCollections {
         Miscellaneous
     }
 
-    public static void loadVimCmds(Resources resources) {
+    public static void loadVimCmdsAndDescrip(Resources resources) {
         mRes = resources;
         mVimCmdCollections.append(VimCmd.BasicMovements.ordinal(),
                 mRes.getStringArray(R.array.commands_array_basic));
@@ -85,10 +86,57 @@ public class VimCmdCollections {
                 mRes.getStringArray(R.array.commands_array_folding));
         mVimCmdCollections.append(VimCmd.Miscellaneous.ordinal(),
                 mRes.getStringArray(R.array.commands_array_misc));
+
+
+
+        mVimCmdDesCollections.append(VimCmd.BasicMovements.ordinal(),
+                mRes.getStringArray(R.array.descrip_array_basic));
+        mVimCmdDesCollections.append(VimCmd.InsertionReplace.ordinal(),
+                mRes.getStringArray(R.array.descrip_array_insertion));
+        mVimCmdDesCollections.append(VimCmd.Deletion.ordinal(),
+                mRes.getStringArray(R.array.descrip_array_deletion));
+        mVimCmdDesCollections.append(VimCmd.InsertMode.ordinal(),
+                mRes.getStringArray(R.array.descrip_array_insert_mode));
+        mVimCmdDesCollections.append(VimCmd.Copying.ordinal(),
+                mRes.getStringArray(R.array.descrip_array_deletion));
+        mVimCmdDesCollections.append(VimCmd.AdvancedInsertion.ordinal(),
+                mRes.getStringArray(R.array.descrip_array_advanced_insertion));
+        mVimCmdDesCollections.append(VimCmd.VisualMode.ordinal(),
+                mRes.getStringArray(R.array.descrip_array_visual_mode));
+        mVimCmdDesCollections.append(VimCmd.UndoingRepeatingRegisters.ordinal(),
+                mRes.getStringArray(R.array.descrip_array_undoing));
+        mVimCmdDesCollections.append(VimCmd.ComplexMovement.ordinal(),
+                mRes.getStringArray(R.array.descrip_array_complex_movement));
+        mVimCmdDesCollections.append(VimCmd.SearchSubstitute.ordinal(),
+                mRes.getStringArray(R.array.descrip_array_search_sub));
+        mVimCmdDesCollections.append(VimCmd.SpecCharInSearchPatterns.ordinal(),
+                mRes.getStringArray(R.array.descrip_array_special_char_search));
+        mVimCmdDesCollections.append(VimCmd.OffsetIinSearchCmds.ordinal(),
+                mRes.getStringArray(R.array.descrip_array_offsets_search));
+        mVimCmdDesCollections.append(VimCmd.MarksAndMotions.ordinal(),
+                mRes.getStringArray(R.array.descrip_array_marks_motions));
+        mVimCmdDesCollections.append(VimCmd.KeyMappabbreviations.ordinal(),
+                mRes.getStringArray(R.array.descrip_array_key_mapping));
+        mVimCmdDesCollections.append(VimCmd.Tags.ordinal(),
+                mRes.getStringArray(R.array.descrip_array_tags));
+        mVimCmdDesCollections.append(VimCmd.ScrollingMultiWindow.ordinal(),
+                mRes.getStringArray(R.array.descrip_array_scrolling));
+        mVimCmdDesCollections.append(VimCmd.ExCmds.ordinal(),
+                mRes.getStringArray(R.array.descrip_array_ex_commands));
+        mVimCmdDesCollections.append(VimCmd.ExRanges.ordinal(),
+                mRes.getStringArray(R.array.descrip_array_ex_ranges));
+        mVimCmdDesCollections.append(VimCmd.Folding.ordinal(),
+                mRes.getStringArray(R.array.descrip_array_folding));
+        mVimCmdDesCollections.append(VimCmd.Miscellaneous.ordinal(),
+                mRes.getStringArray(R.array.descrip_array_misc));
     }
 
     public static String[] getVimCmdByPosition(int position) {
         return mVimCmdCollections.get(position);
+    }
+
+    public static String[] getVimCmdDesByPosition(int position) {
+        return mVimCmdDesCollections.get(position);
     }
 
     public static String[] getVimTitle() {

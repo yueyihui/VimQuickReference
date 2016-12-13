@@ -11,12 +11,18 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import com.github.yueliang.ArrayListAdapter;
+import com.github.yueliang.MainArrayListAdapterAdapter;
+import com.github.yueliang.NextArrayListAdapterAdapter;
 import com.github.yueliang.SpaceItemDecoration;
+import com.github.yueliang.TransformTool;
+import com.github.yueliang.Transformer;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements TransformTool {
+    private RecyclerView mMainRecyclerView;
+    private RecyclerView mNextRecyclerView;
+    private Transformer transformer;
+    private static final String TAG = MainActivity.class.getName();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        VimCmdCollections.loadVimCmds(this.getResources());
+        VimCmdCollections.loadVimCmdsAndDescrip(this.getResources());
 
         initRecyclerView();
 
@@ -38,26 +44,46 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void initRecyclerView() {
+        transformer = new Transformer(this);
+        int spacingInPixels = getResources().
+                getDimensionPixelSize(R.dimen.recycler_view_item_view_space);
+        mMainRecyclerView = (RecyclerView) findViewById(R.id.main_page_recycler_view);
+        mMainRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mMainRecyclerView.addItemDecoration(new SpaceItemDecoration(spacingInPixels));
+        mMainRecyclerView.setAdapter(new MainArrayListAdapterAdapter(this,
+                VimCmdCollections.getVimTitle()));
+
+        mNextRecyclerView = (RecyclerView) findViewById(R.id.next_page_recycler_view);
+        mNextRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mNextRecyclerView.addItemDecoration(new SpaceItemDecoration(spacingInPixels));
+        mNextRecyclerView.setAdapter(new NextArrayListAdapterAdapter(MainActivity.this));
+
+        transformer.setDownAnimationListener(new Transformer.DownAnimationListener() {
+            @Override
+            public void onStart(int selectedPosition) {
+                ((NextArrayListAdapterAdapter) mNextRecyclerView.getAdapter()).
+                        changeData(VimCmdCollections.getVimCmdDesByPosition(selectedPosition),
+                                VimCmdCollections.getVimCmdByPosition(selectedPosition));
+            }
+        });
+    }
+
+    @Override
+    public Transformer getTransformer() {
+        return transformer;
+    }
+
     @Override
     public void onBackPressed() {
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.main_page_recycler_view);
-        ArrayListAdapter adapter = (ArrayListAdapter) recyclerView.getAdapter();
-        if (adapter.getExtendState()) {
-            adapter.reset();
-        } else if(adapter.isAnimating()) {
+        if (!transformer.isAnimating() &&
+                transformer.isExtended()) {
+            transformer.reset();
+        } else if(transformer.isAnimating()) {
             //do nothing, if remove else if, will encounter exit activity when animating
         } else {
             super.onBackPressed();
         }
-    }
-
-    private void initRecyclerView() {
-        int spacingInPixels = getResources().
-                getDimensionPixelSize(R.dimen.recycler_view_item_view_space);
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.main_page_recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.addItemDecoration(new SpaceItemDecoration(spacingInPixels));
-        recyclerView.setAdapter(new ArrayListAdapter(this, VimCmdCollections.getVimTitle()));
     }
 
     @Override //depends on ArrayListAdapater::onBindViewHolder

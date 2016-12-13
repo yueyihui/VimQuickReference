@@ -10,4 +10,9 @@
         android:id="@+id/main_page_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+    <android.support.v7.widget.RecyclerView
+        android:visibility="gone"
+        android:id="@+id/next_page_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </merge>
