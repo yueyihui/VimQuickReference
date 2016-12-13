@@ -11,6 +11,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.github.yueliang.GettingToolbar;
 import com.github.yueliang.MainArrayListAdapterAdapter;
 import com.github.yueliang.NextArrayListAdapterAdapter;
 import com.github.yueliang.SpaceItemDecoration;
@@ -18,7 +20,7 @@ import com.github.yueliang.TransformTool;
 import com.github.yueliang.Transformer;
 
 
-public class MainActivity extends AppCompatActivity implements TransformTool {
+public class MainActivity extends AppCompatActivity implements TransformTool, GettingToolbar {
     private RecyclerView mMainRecyclerView;
     private RecyclerView mNextRecyclerView;
     private Transformer transformer;
@@ -33,15 +35,6 @@ public class MainActivity extends AppCompatActivity implements TransformTool {
         VimCmdCollections.loadVimCmdsAndDescrip(this.getResources());
 
         initRecyclerView();
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
     }
 
     private void initRecyclerView() {
@@ -111,5 +104,10 @@ public class MainActivity extends AppCompatActivity implements TransformTool {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public Toolbar getV7Toolbar() {
+        return (Toolbar) findViewById(R.id.toolbar);
     }
 }

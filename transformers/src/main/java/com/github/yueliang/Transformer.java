@@ -5,9 +5,12 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -36,16 +39,24 @@ public class Transformer {
     private String TAG = Transformer.class.getName();
 
     private TextView mTextView;
-    private CardView mTopCardView;
+    private MaskView mTopMaskView;
     private RecyclerView mMainRecyclerView;
     private RecyclerView mNextRecyclerView;
-
+    private android.support.v7.widget.Toolbar mV7ToolBar;
+    private Rect mToolbarBounds;
+    private int mToolbarHight;
+    private ViewGroup mDecorView;
+    private int mOldColor;
     public void setDownAnimationListener (DownAnimationListener downAnimationListener) {
         mDownAnimationListener = downAnimationListener;
     }
 
     public Transformer(Activity activity) {
         mActivity = activity;
+        mV7ToolBar = ((GettingToolbar) activity).getV7Toolbar();
+        mDecorView = (ViewGroup) activity.getWindow().getDecorView();
+        mTopMaskView = new MaskView(mActivity);
+        mDecorView.addView(mTopMaskView);
     }
 
     public void activateAwareMotion(View target, MainViewHolder holder,
@@ -54,46 +65,49 @@ public class Transformer {
 
         mTextView = holder.getTitleView();
         mTextView.setVisibility(View.INVISIBLE);
-        mTopCardView = (CardView) mActivity.findViewById(R.id.top);
         mMainRecyclerView = (RecyclerView) mActivity.findViewById(R.id.main_page_recycler_view);
         mNextRecyclerView = (RecyclerView) mActivity.findViewById(R.id.next_page_recycler_view);
 
-        // Coordinates of circle initial point
-        final ViewGroup parent = (ViewGroup) mTopCardView.getParent();
         final Rect targetBounds = new Rect();
-        final Rect topCardInitBounds = new Rect();
+        final Rect topMaskViewInitBounds = new Rect();
         target.getDrawingRect(targetBounds);
         Logcat.d(TAG, "before offsetDescendantRectToMyCoords targetBounds = " + targetBounds
                 .flattenToString());
-        mTopCardView.getDrawingRect(topCardInitBounds);
-        parent.offsetDescendantRectToMyCoords(target, targetBounds);
-        parent.offsetDescendantRectToMyCoords(mTopCardView, topCardInitBounds);
+        mTopMaskView.getDrawingRect(topMaskViewInitBounds);
+        mDecorView.offsetDescendantRectToMyCoords(target, targetBounds);
+        //mLayoutMainParent.offsetDescendantRectToMyCoords(mTopMaskView, topMaskViewInitBounds);
         Logcat.d(TAG, "after offsetDescendantRectToMyCoords targetBounds = " + targetBounds
                 .flattenToString());
-        mCardOffsetDistance = targetBounds.centerY() - topCardInitBounds.centerY();
+        mCardOffsetDistance = targetBounds.centerY() - topMaskViewInitBounds.centerY();
         Logcat.d(TAG, "activateAwareMotion mCardOffsetDistance = " + mCardOffsetDistance);
 
-        mEndRadius = (float) Math.hypot(topCardInitBounds.width() * .5f,
-                topCardInitBounds.height() * .5f);//√（x²+y²）
+        mToolbarBounds = new Rect();
+        mV7ToolBar.getDrawingRect(mToolbarBounds);
+        mDecorView.offsetDescendantRectToMyCoords(mV7ToolBar, mToolbarBounds);
+
+        mEndRadius = (float) Math.hypot(topMaskViewInitBounds.width() * .5f,
+                topMaskViewInitBounds.height() * .5f);//√（x²+y²）
 //        mStartRadius = (float) Math.hypot(mTextView.getWidth() * .5f,
 //                mTextView.getHeight() * .5f);//√（x²+y²）
         mStartRadius = mTextView.getHeight() / 2;
         Animator circularReveal =
-                ViewAnimationUtils.createCircularReveal(mTopCardView,
-                        topCardInitBounds.centerX(),
-                        topCardInitBounds.centerY(),
+                ViewAnimationUtils.createCircularReveal(mTopMaskView,
+                        topMaskViewInitBounds.centerX(),
+                        topMaskViewInitBounds.centerY(),
                         mStartRadius,
                         mEndRadius);
+        circularReveal.setDuration(1000);
 
+        mCardOffsetDistance += mToolbarHight;
         ValueAnimator pathAnimator = ValueAnimator.
-                ofFloat(mCardOffsetDistance, 0);
+                ofFloat(mCardOffsetDistance, mToolbarBounds.top);
         pathAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 float offsetY = (float) animation.getAnimatedValue();
                 Logcat.d(TAG, "activateAwareMotion ValueAnimator offsetY = " + offsetY);
-                mTopCardView.setTranslationY(offsetY);
+                mTopMaskView.setTranslationY(offsetY);
             }
         });
 
@@ -105,16 +119,19 @@ public class Transformer {
             @Override
             public void onAnimationStart(Animator animation) {
                 mIsAnimating = true;
-                mTopCardView.setVisibility(View.VISIBLE);
-                if (!(mTopCardView.getTranslationY() == mCardOffsetDistance)) {
-                    mTopCardView.setTranslationY(mCardOffsetDistance);
+                mOldColor = ((ColorDrawable) mV7ToolBar.getBackground()).getColor();
+                mTopMaskView.setVisibility(View.VISIBLE);
+                if (!(mTopMaskView.getTranslationY() == mCardOffsetDistance - mToolbarHight)) {
+                    mTopMaskView.setTranslationY(mCardOffsetDistance);
                 }
             }
 
             @Override
             public void onAnimationEnd(Animator animation) {
                 mMainRecyclerView.setVisibility(View.INVISIBLE);
-                dropDownRecyclerView(topCardInitBounds);
+                mTopMaskView.setVisibility(View.INVISIBLE);
+                mV7ToolBar.setBackgroundColor(mActivity.getResources().getColor(R.color.color_1));
+                riseUpRecyclerView(topMaskViewInitBounds);
             }
         });
         if (!isAnimating()) {
@@ -122,18 +139,19 @@ public class Transformer {
         }
     }
 
-    private void dropDownRecyclerView(final Rect topCardRect) {
+    private void riseUpRecyclerView(final Rect topMaskViewInitBounds) {
         Logcat.d("TAG", "transformChildRecyclerView param topCardRect = " +
-                topCardRect.flattenToString());
+                topMaskViewInitBounds.flattenToString());
         //recyclerView was defined android:layout_height="match_parent",
         //that's mean is that it only drawing the Rect equivalent to sum of Rect of it's child view.
         //so we using height to calculate how long need to rising up.
         //NOTICE: in the end the NextRecyclerView will change height of itself,
         //so if use mMoveUp = topCardRect.bottom - mNextRecyclerView.getHeight();
         //will get mMoveUp smaller and smaller
-        mMoveUp = topCardRect.bottom - mMainRecyclerView.getHeight();
+        mMoveUp = mMainRecyclerView.getHeight();
+        Logcat.d(TAG, "recyclerView move up = " + mMoveUp);
         ValueAnimator pathAnimator = ValueAnimator.
-                ofFloat(mMoveUp, topCardRect.bottom);
+                ofFloat(mMoveUp, 0);
         pathAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
             @Override
@@ -150,13 +168,6 @@ public class Transformer {
             set.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationStart(Animator animation) {
-                    mNextRecyclerView.setTranslationY(mMoveUp);
-
-                    Logcat.d(TAG, "recyclerView move up = " + mMoveUp);
-                    ViewGroup.LayoutParams origin = mNextRecyclerView.getLayoutParams();
-                    origin.height = -(int) mMoveUp;
-                    mNextRecyclerView.setLayoutParams(origin);
-
                     mNextRecyclerView.setVisibility(View.VISIBLE);
                     if(mDownAnimationListener != null) {
                         mDownAnimationListener.onStart(mSelectedChildPosition);
@@ -174,7 +185,7 @@ public class Transformer {
 
     public void reset() {
         ValueAnimator pathAnimator = ValueAnimator.
-                ofFloat(mTopCardView.getBottom(), mMoveUp);
+                ofFloat(0, mMoveUp);
         pathAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
             @Override
@@ -197,7 +208,7 @@ public class Transformer {
             public void onAnimationEnd(Animator animation) {
                 mNextRecyclerView.setVisibility(View.GONE);
                 mMainRecyclerView.setVisibility(View.VISIBLE);
-                resetTopCardView();
+                resetTopMaskView();
             }
         });
         if (!isAnimating()) {
@@ -205,27 +216,27 @@ public class Transformer {
         }
     }
 
-    private void resetTopCardView() {
-        Rect topCardBounds = new Rect();
-        mTopCardView.getDrawingRect(topCardBounds);
+    private void resetTopMaskView() {
+        Rect topMaskViewBounds = new Rect();
+        mTopMaskView.getDrawingRect(topMaskViewBounds);
 
         Animator circularReveal =
-                ViewAnimationUtils.createCircularReveal(mTopCardView,
-                        topCardBounds.centerX(),
-                        topCardBounds.centerY(),
+                ViewAnimationUtils.createCircularReveal(mTopMaskView,
+                        topMaskViewBounds.centerX(),
+                        topMaskViewBounds.centerY(),
                         mEndRadius,
                         mStartRadius);
 
         Logcat.d(TAG, "reset mCardOffsetDistance = " + mCardOffsetDistance);
         ValueAnimator pathAnimator = ValueAnimator.
-                ofFloat(0, mCardOffsetDistance);
+                ofFloat(mToolbarBounds.top, mCardOffsetDistance);
         pathAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 float offsetY = (float) animation.getAnimatedValue();
                 Logcat.d(TAG, "raiseUpRecyclerView ValueAnimator offsetY = " + offsetY);
-                mTopCardView.setTranslationY(offsetY);
+                mTopMaskView.setTranslationY(offsetY);
             }
         });
         AnimatorSet set = new AnimatorSet();
@@ -234,10 +245,16 @@ public class Transformer {
         set.setDuration(CIRCULAR_REVEAL_DURING);
         set.addListener(new AnimatorListenerAdapter() {
             @Override
+            public void onAnimationStart(Animator animation) {
+                mTopMaskView.setVisibility(View.VISIBLE);
+                mV7ToolBar.setBackgroundColor(mOldColor);
+            }
+
+            @Override
             public void onAnimationEnd(Animator animation) {
                 mIsAnimating = false;
                 mExtended = false;
-                mTopCardView.setVisibility(View.INVISIBLE);
+                mTopMaskView.setVisibility(View.INVISIBLE);
                 mTextView.setVisibility(View.VISIBLE);
             }
         });
@@ -254,5 +271,17 @@ public class Transformer {
 
     public int getSelectedChildPosition() {
         return mSelectedChildPosition;
+    }
+
+    private class MaskView extends View {
+
+        public MaskView(Context context) {
+            super(context);
+            ViewGroup.LayoutParams layoutParams = new ViewGroup.
+                    LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 58);
+            setLayoutParams(layoutParams);
+            setBackgroundColor(context.getResources().getColor(R.color.color_1));
+            setVisibility(View.INVISIBLE);
+        }
     }
 }
