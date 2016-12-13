@@ -6,12 +6,16 @@ import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.text.Layout;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
@@ -44,7 +48,7 @@ public class Transformer {
     private RecyclerView mNextRecyclerView;
     private android.support.v7.widget.Toolbar mV7ToolBar;
     private Rect mToolbarBounds;
-    private int mToolbarHight;
+    private ViewGroup.LayoutParams mToolbargetLayoutParams;
     private ViewGroup mDecorView;
     private int mOldColor;
     public void setDownAnimationListener (DownAnimationListener downAnimationListener) {
@@ -54,6 +58,8 @@ public class Transformer {
     public Transformer(Activity activity) {
         mActivity = activity;
         mV7ToolBar = ((GettingToolbar) activity).getV7Toolbar();
+        mToolbargetLayoutParams = mV7ToolBar.getLayoutParams();
+        Log.d(TAG, mToolbargetLayoutParams.height + "");
         mDecorView = (ViewGroup) activity.getWindow().getDecorView();
         mTopMaskView = new MaskView(mActivity);
         mDecorView.addView(mTopMaskView);
@@ -98,7 +104,6 @@ public class Transformer {
                         mEndRadius);
         circularReveal.setDuration(1000);
 
-        mCardOffsetDistance += mToolbarHight;
         ValueAnimator pathAnimator = ValueAnimator.
                 ofFloat(mCardOffsetDistance, mToolbarBounds.top);
         pathAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -121,7 +126,7 @@ public class Transformer {
                 mIsAnimating = true;
                 mOldColor = ((ColorDrawable) mV7ToolBar.getBackground()).getColor();
                 mTopMaskView.setVisibility(View.VISIBLE);
-                if (!(mTopMaskView.getTranslationY() == mCardOffsetDistance - mToolbarHight)) {
+                if (!(mTopMaskView.getTranslationY() == mCardOffsetDistance)) {
                     mTopMaskView.setTranslationY(mCardOffsetDistance);
                 }
             }
@@ -277,9 +282,7 @@ public class Transformer {
 
         public MaskView(Context context) {
             super(context);
-            ViewGroup.LayoutParams layoutParams = new ViewGroup.
-                    LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 58);
-            setLayoutParams(layoutParams);
+            setLayoutParams(mToolbargetLayoutParams);
             setBackgroundColor(context.getResources().getColor(R.color.color_1));
             setVisibility(View.INVISIBLE);
         }
