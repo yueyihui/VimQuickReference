@@ -1,4 +1,4 @@
-package com.github.lyuecszhang.vimquickreference;
+package com.github.vimquickreference;
 
 import android.content.res.Resources;
 import android.util.SparseArray;

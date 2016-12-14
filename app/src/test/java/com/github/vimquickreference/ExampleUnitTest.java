@@ -1,4 +1,4 @@
-package com.github.lyuecszhang.vimquickreference;
+package com.github.vimquickreference;
 
 import org.junit.Test;
 

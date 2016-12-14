@@ -1,4 +1,4 @@
-package com.github.lyuecszhang.vimquickreference;
+package com.github.vimquickreference;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
