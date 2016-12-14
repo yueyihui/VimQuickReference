@@ -41,13 +41,13 @@ public class MainActivity extends AppCompatActivity implements TransformTool, Ge
         transformer = new Transformer(this);
         int spacingInPixels = getResources().
                 getDimensionPixelSize(R.dimen.recycler_view_item_view_space);
-        mMainRecyclerView = (RecyclerView) findViewById(R.id.main_page_recycler_view);
+        mMainRecyclerView = transformer.getMainRecyclerView();
         mMainRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mMainRecyclerView.addItemDecoration(new SpaceItemDecoration(spacingInPixels));
         mMainRecyclerView.setAdapter(new MainArrayListAdapterAdapter(this,
                 VimCmdCollections.getVimTitle()));
 
-        mNextRecyclerView = (RecyclerView) findViewById(R.id.next_page_recycler_view);
+        mNextRecyclerView = transformer.getNextRecyclerView();
         mNextRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mNextRecyclerView.addItemDecoration(new SpaceItemDecoration(spacingInPixels));
         mNextRecyclerView.setAdapter(new NextArrayListAdapterAdapter(MainActivity.this));

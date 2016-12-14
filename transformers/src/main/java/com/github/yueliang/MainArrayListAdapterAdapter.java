@@ -68,16 +68,7 @@ public class MainArrayListAdapterAdapter extends RecyclerView.Adapter<MainViewHo
         Spanned spanned = Html.fromHtml(mDataString[position]);
         Spanned str = Html.fromHtml(spanned.toString());
         TextView textView = holder.getTitleView();
-        if (mTransformer.getSelectedChildPosition() == position
-                && mTransformer.isExtended()) {
-            textView.setVisibility(View.INVISIBLE);
-        } else {
-            if (textView.getVisibility() == View.INVISIBLE) {
-                textView.setVisibility(View.VISIBLE);
-            }
-            textView.setText(str);
-        }
-
+        textView.setText(str);
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,7 +79,9 @@ public class MainArrayListAdapterAdapter extends RecyclerView.Adapter<MainViewHo
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mTransformer.activateAwareMotion(v, holder, holder.getAdapterPosition());
+                if (!mTransformer.isAnimating() && !mTransformer.isExtended()) {
+                    mTransformer.activateAwareMotion(v, holder, holder.getAdapterPosition());
+                }
             }
         });
     }
