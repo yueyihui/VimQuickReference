@@ -15,13 +15,14 @@
     limitations under the License.
 -->
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/main_page_recycler_view"
+    <fragment
+        android:name="com.github.yueliang.MainFragment"
+        android:tag="fragment_main"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-    <android.support.v7.widget.RecyclerView
-        android:visibility="gone"
-        android:id="@+id/next_page_recycler_view"
+        android:layout_height="match_parent" />
+    <fragment
+        android:name="com.github.yueliang.NextFragment"
+        android:tag="fragment_next"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 </merge>
