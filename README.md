@@ -1,2 +1,2 @@
 # VimQuickReference
-![image](https://github.com/yueyihui/VimQuickReference/blob/master/dalao_s_pic.gif)
+<img src="https://github.com/yueyihui/VimQuickReference/blob/master/example.gif">
