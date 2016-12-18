@@ -20,12 +20,13 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
@@ -36,10 +37,10 @@ import android.widget.TextView;
  */
 
 public class Transformer {
-    public interface DownAnimationListener {
+    public interface AnimationListener {
         public void onStart(int selectedPosition);
     }
-    private DownAnimationListener mDownAnimationListener;
+    private AnimationListener mAnimationListener;
     private Activity mActivity;
     private boolean mExtended;
     private boolean mIsAnimating;
@@ -52,6 +53,8 @@ public class Transformer {
     private static final int SHORT_DURING = 300;
     private static final int DELAY = LONG_DURING - SHORT_DURING;
     private static final String TAG = Transformer.class.getName();
+    private static final String MAIN_FRAGMENT_TAG = "fragment_main";
+    private static final String NEXT_FRAGMENT_TAG = "fragment_next";
 
     private TextView mTextView;
     private MaskView mTopMaskView;
@@ -62,8 +65,13 @@ public class Transformer {
     private ViewGroup.LayoutParams mToolbarLayoutParams;
     private ViewGroup mDecorView;
     private int mOldColor;
-    public void setDownAnimationListener (DownAnimationListener downAnimationListener) {
-        mDownAnimationListener = downAnimationListener;
+
+    private FragmentManager mFragmentManager;
+
+    private Fragment mMainFragment;
+    private Fragment mNextFragment;
+    public void setAnimationListener(AnimationListener animationListener) {
+        mAnimationListener = animationListener;
     }
 
     public Transformer(Activity activity) {
@@ -73,8 +81,14 @@ public class Transformer {
         mDecorView = (ViewGroup) activity.getWindow().getDecorView();
         mTopMaskView = new MaskView(mActivity);
         mDecorView.addView(mTopMaskView);
-        mMainRecyclerView = (RecyclerView) mActivity.findViewById(R.id.main_page_recycler_view);
-        mNextRecyclerView = (RecyclerView) mActivity.findViewById(R.id.next_page_recycler_view);
+
+        mFragmentManager = mActivity.getFragmentManager();
+        mMainFragment = mFragmentManager.findFragmentByTag(MAIN_FRAGMENT_TAG);
+        mMainRecyclerView = (RecyclerView) mMainFragment.getView();
+
+        mNextFragment = mFragmentManager.findFragmentByTag(NEXT_FRAGMENT_TAG);
+        mNextRecyclerView = (RecyclerView) mNextFragment.getView();
+        mFragmentManager.beginTransaction().hide(mNextFragment).commit();
     }
 
     public RecyclerView getMainRecyclerView() {
@@ -85,7 +99,7 @@ public class Transformer {
         return mNextRecyclerView;
     }
 
-    public void activateAwareMotion(View target, MainViewHolder holder,
+    void activateAwareMotion(View target, MainViewHolder holder,
                              int selectedChildPosition) {
         mSelectedChildPosition = selectedChildPosition;
 
@@ -142,7 +156,7 @@ public class Transformer {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                mMainRecyclerView.setVisibility(View.INVISIBLE);
+                mFragmentManager.beginTransaction().hide(mMainFragment).commit();
                 riseUpRecyclerView(topMaskViewInitBounds);
             }
 
@@ -211,9 +225,9 @@ public class Transformer {
         pathAnimator.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
-                mNextRecyclerView.setVisibility(View.VISIBLE);
-                if(mDownAnimationListener != null) {
-                    mDownAnimationListener.onStart(mSelectedChildPosition);
+                mFragmentManager.beginTransaction().show(mNextFragment).commit();
+                if(mAnimationListener != null) {
+                    mAnimationListener.onStart(mSelectedChildPosition);
                 }
             }
 
@@ -252,13 +266,13 @@ public class Transformer {
             @Override
             public void onAnimationStart(Animator animation) {
                 mIsAnimating = true;
+                resetTopMaskView();
             }
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                mNextRecyclerView.setVisibility(View.GONE);
-                mMainRecyclerView.setVisibility(View.VISIBLE);
-                resetTopMaskView();
+                mFragmentManager.beginTransaction().hide(mNextFragment).commit();
+                mFragmentManager.beginTransaction().show(mMainFragment).commit();
             }
 
             @Override
